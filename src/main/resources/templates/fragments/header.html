@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+
+<div th:fragment="header" class="header">
+    <div class="headerButtonContainer">
+        <form th:action="@{/user}" method="get">
+            <button type="submit" class="headerButton"><b>먹거리 주문 🍖</b></button>
+        </form>
+        <form th:action="@{/user}" method="get">
+            <button type="submit" class="headerButton"><b>금액 충전 💸</b></button>
+        </form>
+    </div>
+</div>
+</html>

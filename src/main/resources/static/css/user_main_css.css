@@ -1,0 +1,7 @@
+body{
+  /* background-repeat : 반복조절 */
+  background-image: url('https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FccR2Hx%2FbtqHxa1Olrj%2FGJby3orVuA50OfL42Zmww0%2Fimg.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+/*   background-position: top; */
+}
