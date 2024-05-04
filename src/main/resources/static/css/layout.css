@@ -1,0 +1,26 @@
+.header {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.headerButtonContainer {
+    display: flex;
+}
+
+.headerButton {
+    margin: 0 5px;
+    padding: 10px 20px;
+    background-color: #504A4B;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.headerButton:hover {
+  background-color: #FFDB58;
+  color: #000000;
+}

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>주문확인서</title>
+</head>
+<body>
+<div class="content" layout:fragment="content">
+    <table>
+        <tr>
+            <th>주문번호</th>
+            <th>회원이름</th>
+            <th>메뉴이름</th>
+            <th>수량</th>
+        </tr>
+        <tr th:each="sell : ${sellDto}" th:object="${sell}">
+            <td th:text="*{id}"></td>
+            <td th:text="*{usersDto.name}"></td>
+            <td th:text="*{menuDto.menuName}"></td>
+            <td th:text="*{orderAmount}"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
