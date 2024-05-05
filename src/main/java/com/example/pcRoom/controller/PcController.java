@@ -24,10 +24,12 @@ public class PcController {
         return "user/user_main";
     }
 
-    @GetMapping("/main/sell")
+    @GetMapping("/admin/sell")
     public String sell(Model model) {
         List<SellDto> sellDtoList = adminService.sell();
+        List<SellDto> total = adminService.total();
         model.addAttribute("sellDto", sellDtoList);
-        return null; // 아직 페이지를 안 만들었음
+        model.addAttribute("total", total);
+        return "admin/sell";
     }
 }

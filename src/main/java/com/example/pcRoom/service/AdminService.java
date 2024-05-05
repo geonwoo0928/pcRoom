@@ -36,9 +36,18 @@ public class AdminService {
             Users users = usersRepository.findById(s.getUserId()).orElse(null);
             MenuDto menuDto = MenuDto.fromMenuEntity(menu); // Entity 에서 필요한 정보 dto 로 가져오기?
             UsersDto usersDto = UsersDto.fromUserEntity(users);
-            int orderAmount = s.getSellAmount();
-            sellDto.add(SellDto.fromOrderEntity(s ,menuDto, usersDto, orderAmount)); // 다 추가 ~
+            int sellAmount = s.getSellAmount();
+            sellDto.add(SellDto.fromSellEntity(s ,menuDto, usersDto, sellAmount)); // 다 추가 ~
         }
         return sellDto;
+    }
+
+    public List<SellDto> total() {
+//        List<Sell> sells = sellRepository.findAll();
+        List<SellDto> sellDtos =  new ArrayList<>();
+
+        int total = sellRepository.total();
+        sellDtos.add(SellDto.fromtotal(total));
+        return sellDtos;
     }
 }
