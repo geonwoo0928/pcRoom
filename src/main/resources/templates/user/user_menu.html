@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div class="content" layout:fragment="content">
+        <div class="menu_tab">
+            <div class="menu_nav">
+                <a class="nav-link" href="#">[쿼카PC]라면</a>
+                <a class="nav-link" href="#">[쿼카PC]음료</a>
+                <a class="nav-link" href="#">[쿼카PC]간식</a>
+                <a class="nav-link" href="#">[쿼카PC]과자</a>
+            </div>
+            <div class="menu_list"><!--메뉴 보이는 코드-->
+                <table class="menu-table">
+                    <tr th:each="row, rowStat: ${#numbers.sequence(0, menuDto.size() - 1)}" th:if="${rowStat.index % 4 == 0}">
+                        <td th:each="col: ${#numbers.sequence(rowStat.index, rowStat.index + 3)}" th:if="${col &lt; menuDto.size()}">
+                            <button class="menu-button" onclick="addToOrder('${menuDto[col].menuName}', ${menuDto[col].menuPrice})"> <!--버튼 누르면 제품 추가되도록 수정해야함-->
+                            <img th:src="@{'/img/' + ${menuDto[col].menuName} + '.jpg'}">
+                            <span th:text="${menuDto[col].menuName}"></span>
+                            <span th:text="${menuDto[col].menuPrice} +'원'"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div><!--메뉴 보이는 코드-->
+            <div class="menu-order"><!--주문내역-->
+                <div class="menu-order-view"><!--주문내역표시창-->
+
+                </div>
+            </div><!--주문내역-->
+        </div>
+    </div>
+</body>
+</html>
