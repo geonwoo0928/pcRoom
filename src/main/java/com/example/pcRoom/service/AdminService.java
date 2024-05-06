@@ -43,7 +43,6 @@ public class AdminService {
     }
 
     public List<SellDto> total() {
-//        List<Sell> sells = sellRepository.findAll();
         List<SellDto> sellDtos =  new ArrayList<>();
 
         int total = sellRepository.total();
