@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script th:src="@{/js/menu.js}" th:inline="javascript"></script>
 </head>
 <body>
     <div class="content" layout:fragment="content">
@@ -19,7 +20,7 @@
                 <table class="menu-table">
                     <tr th:each="row, rowStat: ${#numbers.sequence(0, menuDto.size() - 1)}" th:if="${rowStat.index % 4 == 0}">
                         <td th:each="col: ${#numbers.sequence(rowStat.index, rowStat.index + 3)}" th:if="${col &lt; menuDto.size()}">
-                            <button class="menu-button" onclick="addToOrder('${menuDto[col].menuName}', ${menuDto[col].menuPrice})"> <!--버튼 누르면 제품 추가되도록 수정해야함-->
+                            <button class="menu-button" onclick="addToOrder('${menuDto[col].menuName}', '${menuDto[col].menuPrice}')">
                             <img th:src="@{'/img/' + ${menuDto[col].menuName} + '.jpg'}">
                             <span th:text="${menuDto[col].menuName}"></span>
                             <span th:text="${menuDto[col].menuPrice} +'원'"></span>
