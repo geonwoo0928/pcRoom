@@ -7,9 +7,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class MenuDto {
 
     private Long menuId;

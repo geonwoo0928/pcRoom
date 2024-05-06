@@ -1,0 +1,89 @@
+body{
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+}
+
+.menu_tab {
+    width: 85%;
+    height: 850px;
+    background-color: #32313a;
+    margin: 10px auto;
+    display: grid;
+    grid-template-columns: 70% 30%; /* 두 개의 열을 가로로 배치 */
+    grid-template-rows: auto; /* 행의 크기를 자동으로 조절 */
+}
+
+.menu_nav {
+    width: 100%;
+    height: 50px;
+    background-color: #ffffff;
+    text-align: center;
+    padding-bottom : 20px;
+    display: flex; /* 수평으로 정렬하기 위해 flex 사용 */
+    justify-content: space-around; /* 항목을 동일한 간격으로 정렬 */
+}
+
+.nav-link {
+    padding: 10px;
+    color: black;
+    font-size: 20px;
+    margin-right: 40px;
+}
+
+/*메뉴리스트*/
+
+.menu_list {
+    width: 100%;
+    height: 790px;
+    background-color: #32313a;
+    margin-top : 10px;
+    grid-column: 1;
+    grid-row: span 2; /* 두 번째 열에 두 줄을 차지하도록 설정 */
+}
+
+
+.menu-table {
+    margin-left : 32px;
+    margin-top : 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.menu-table td{
+    display : inline-block;
+    margin : 5px;
+    width : 23%;
+    height : 33%;
+    border: none;
+    background-color : #ffffff;
+    position : relative;
+    text-align : center;
+}
+
+.menu-table .menu-button {
+    border : none;
+}
+
+.menu-table img{
+    width : 100%;
+    height : 80%;
+}
+
+/* 메뉴오더창 */
+.menu-order {
+    width: 100%;
+    height: 850px;
+    background : linear-gradient(#976cf8, #66aee5);
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    display: flex;
+    justify-content: center;
+}
+
+.menu-order-view {
+    margin-top : 10px;
+    width : 95%;
+    height : 50%;
+    background-color : #ffffff;
+    border-radius : 10px;
+}
