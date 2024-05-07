@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin_layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/table.css}">
+    <title>회원 목록</title>
 </head>
 <body>
-
+<div class="content" layout:fragment="content">
+    <table>
+        <tr>
+            <th>회원 ID</th>
+            <th>회원 이름</th>
+            <th>남은 잔액</th>
+            <th>총 사용 금액</th>
+            <th colspan="2"></th>
+        </tr>
+        <tr th:each="user : ${usersDto}" th:object="${user}">
+            <td th:text="*{userId}">회원 ID</td>
+            <td th:text="*{name}">회원 이름</td>
+            <td th:text="*{money}">남은 잔액</td>
+            <td th:text="*{money}">총 사용 금액</td>
+            <td>
+                <button>수정</button>
+            </td>
+            <td>
+                <button>삭제</button>
+            </td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>

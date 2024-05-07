@@ -16,6 +16,8 @@ public class UsersDto {
     private int money;
     private String status; //관리자 , 일반
 
+
+//    Entity를 Dto로 변환
     public static UsersDto fromUserEntity(Users users) {
         return new UsersDto(
                 users.getUserId(),
@@ -24,5 +26,16 @@ public class UsersDto {
                 users.getMoney(),
                 users.getStatus()
         );
+    }
+
+    //    Dto를 Entity로 변환
+    public Users fromUserDto(UsersDto usersDto) {
+        Users users = new Users();
+        users.setUserId(usersDto.getUserId());
+        users.setName(usersDto.getName());
+        users.setPassword(usersDto.getPassword());
+        users.setMoney(usersDto.getMoney());
+        users.setStatus(usersDto.getStatus());
+        return users;
     }
 }

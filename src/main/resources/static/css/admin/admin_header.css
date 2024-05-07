@@ -1,0 +1,61 @@
+.adminNavbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh;
+    background-color: #020715;
+    padding: 20px;
+}
+
+.adminNavbar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.adminNavbar li {
+    margin-bottom: 10px;
+}
+
+.adminNavbar a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #fff;
+    border-radius: 10px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.adminNavbar a:hover {
+    background-color: #FFCA1A;
+    color: #020715;
+}
+
+.adminNavbar li button {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #fff;
+    border-radius: 10px;
+    font-weight: bold;
+    border: 0;
+    background-color: transparent;
+    width: 100%;
+    text-align: left;
+}
+
+.adminNavbar li button:hover {
+    background-color: #FFCA1A;
+    color: #020715;
+}
+
+.adminNavbar li:last-child {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 30px;
+  width: 80%;
+}

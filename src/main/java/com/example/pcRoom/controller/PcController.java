@@ -2,6 +2,7 @@ package com.example.pcRoom.controller;
 
 import com.example.pcRoom.dto.MenuDto;
 import com.example.pcRoom.dto.SellDto;
+import com.example.pcRoom.dto.UsersDto;
 import com.example.pcRoom.service.AdminService;
 import com.example.pcRoom.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,8 @@ public class PcController {
         this.userService = userService;
     }
 
+//    User
+
     @GetMapping("")
     public String userMainPage(){
 
@@ -35,6 +38,16 @@ public class PcController {
         return "/user/user_menu";
     } //메뉴판으로 이동
 
+
+
+//    admin
+
+    @GetMapping("/admin/users")
+    public String adminMain(Model model) {
+        List<UsersDto> usersDtoList = userService.usersList();
+        model.addAttribute("usersDto", usersDtoList);
+        return "admin/user_list";
+    }
 
     @GetMapping("/admin/sell")
     public String sell(Model model) {

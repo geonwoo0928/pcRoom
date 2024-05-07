@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+
+<div th:fragment="admin_header" class="adminNavbar">
+    <ul>
+        <li><b>쿼카네 PC방 🐻</b></li>
+        <li><a href="#"> 홈</a></li>
+        <li>
+            <form th:action="@{/admin/users}" method="get">
+                <button type="submit">회원 목록</button>
+            </form>
+        </li>
+        <li>
+            <form th:action="@{/admin/menu}" method="get">
+                <button type="submit">메뉴 목록</button>
+            </form>
+        </li>
+        <li>
+            <form th:action="@{/admin/sell}" method="get">
+                <button type="submit">주문 목록</button>
+            </form>
+        </li>
+        <li>
+            <form th:action="@{/}" method="get">
+                <button type="submit">로그아웃</button>
+            </form>
+        </li>
+    </ul>
+</div>
+</html>
