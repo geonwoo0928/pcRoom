@@ -6,27 +6,42 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{css/table.css}">
     <title>주문확인서 , 매출확인</title>
+    <link rel="stylesheet" th:href="@{/css/admin_sell.css}">
+    <title>주문현황 , 매출확인</title>
 </head>
 <body>
 <div class="content" layout:fragment="content">
-    <table>
-        <tr>
-            <th>주문번호</th>
-            <th>회원이름</th>
-            <th>메뉴이름</th>
-            <th>수량</th>
-        </tr>
-        <tr th:each="sell : ${sellDto}" th:object="${sell}">
-            <td th:text="*{id}"></td>
-            <td th:text="*{usersDto.name}"></td>
-            <td th:text="*{menuDto.menuName}"></td>
-            <td th:text="*{sellAmount}"></td>
-        </tr>
-        <tr th:each="total : ${total}" th:object="${total}">
-            <td colspan="2">총 매출</td>
-            <td colspan="2" th:text="*{total} + '원'"></td>
-        </tr>
-    </table>
+    <div class="p-3 mb-2 bg-primary-subtle text-color">
+        <div class="h4 pb-2 mb-4 text-color border-bottom border-dark text-center">
+            <h3>주문현황 🧾</h3>
+        </div>
+        <div class="sell-view">
+            <div th:each="sell : ${sellDto}" th:object="${sell}">
+                <div class="card">
+                    <!-- 주문번호 -->
+                    <div class="id">
+                        <span style="font-size: 15px;">주문번호</span>
+                        <div style="font-size: 30px;" th:text="*{id}"></div>
+                    </div>
+
+                    <div class="card-2">
+                        <!-- user name-->
+                        <div class="user" th:text="*{usersDto.name}">
+                        </div>
+                        <!-- menu name , amount -->
+                        <div class="menu-amount">
+                            <span th:text="*{menuDto.menuName}"></span>
+                            <span th:text="' - ' + *{sellAmount} + '개'"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="h4 pb-2 mb-4 text-color border-bottom border-dark text-center"></div>
+        <div th:each="total : ${total}" th:object="${total}">
+            <div class="total" th:text="'총 매출 ➡️' + ' ' + *{total} + '원'"></div> <!--총 매출-->
+        </div>
+    </div>
 </div>
 </body>
 </html>
