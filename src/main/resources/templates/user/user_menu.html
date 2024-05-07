@@ -17,6 +17,7 @@
             <a class="nav-link" href="#">[쿼카PC]과자</a>
         </div>
         <div class="menu_list"><!--메뉴 보이는 코드-->
+            <form id="orderForm" th:action="@{/user/userMenu}" method="post"></form>
             <table class="menu-table">
                     <tr th:each="row, rowStat: ${#numbers.sequence(0, menuDto.size() - 1)}" th:if="${rowStat.index % 4 == 0}">
                         <td th:each="col: ${#numbers.sequence(rowStat.index, rowStat.index + 3)}" th:if="${col &lt; menuDto.size()}">
@@ -30,10 +31,10 @@
                         </td>
                     </tr>
             </table>
+            <input type="button" value="구매하기" onclick="submitOrder()">
         </div><!--메뉴 보이는 코드-->
         <div class="menu-order"><!--주문내역-->
-            <div class="menu-order-view"><!--주문내역표시창-->
-
+            <div class="menu-order-view" id="menu-order-view"><!--주문내역표시창-->
             </div>
         </div><!--주문내역-->
     </div>

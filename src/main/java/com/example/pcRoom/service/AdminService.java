@@ -49,4 +49,12 @@ public class AdminService {
         sellDtos.add(SellDto.fromtotal(total));
         return sellDtos;
     }
+
+    public void minusSellAmountToMenuAmount(Long menuId , int sellAmount){
+        Menu menu = menuRepository.findById(menuId).orElse(null);
+        int menuAmount = menu.getMenuAmount();
+        menuAmount = menuAmount - sellAmount;
+        menu.setMenuAmount(menuAmount);
+        menuRepository.save(menu);
+    }//주문한 수량에 맞게 재고가 줄어들게 //sellAmount 주문한 수량 , menuAmount 재고 (주문한 수량 > 재고 일때 구현해야함 미완)
 }
