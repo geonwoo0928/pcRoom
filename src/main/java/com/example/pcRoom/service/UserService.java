@@ -3,9 +3,12 @@ package com.example.pcRoom.service;
 import com.example.pcRoom.dto.MenuDto;
 import com.example.pcRoom.dto.UsersDto;
 import com.example.pcRoom.entity.Menu;
+import com.example.pcRoom.entity.Users;
 import com.example.pcRoom.repository.MenuRepository;
 import com.example.pcRoom.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,4 +40,8 @@ public class UserService {
                 .map(x -> UsersDto.fromUserEntity(x))
                 .toList();
     } // 모든 회원 정보 출력
+
+    public Page<Users> pagingList(Pageable pageable) {
+        return usersRepository.findAll(pageable);
+    }
 }
