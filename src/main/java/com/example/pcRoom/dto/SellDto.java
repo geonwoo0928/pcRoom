@@ -10,14 +10,14 @@ public class SellDto {
 
     private Long id;
     private String userId;
-    private int menuId;
+    private Long menuId;
     private int sellAmount;
 
     private MenuDto menuDto;
     private UsersDto usersDto;
     private int total;
 
-    public SellDto(Long id, String userId, int menuId, int sellAmount, MenuDto menuDto, UsersDto usersDto) {
+    public SellDto(Long id, String userId, Long menuId, int sellAmount, MenuDto menuDto, UsersDto usersDto) {
         this.id = id;
         this.userId = userId;
         this.menuId = menuId;
@@ -25,6 +25,19 @@ public class SellDto {
         this.menuDto = menuDto;
         this.usersDto = usersDto;
     }
+
+    public SellDto(Long menuId){
+        this.menuId = menuId;
+        this.id = menuId; //시험삼아 지워야함
+        } //사용 UserService - putMenuList sell테이블에 메뉴 아이디 등록
+    public static Sell dtoToEntity(SellDto sellDto){
+        return new Sell(
+                sellDto.getId(),
+                sellDto.getUserId(),
+                sellDto.getMenuId(),
+                sellDto.sellAmount
+        );
+    }//사용 UserService - putMenuList sell테이블에 메뉴 아이디 등록
 
     public static SellDto fromSellEntity(Sell form, MenuDto menuDto, UsersDto usersDto, int sellAmount) {
         return new SellDto(
