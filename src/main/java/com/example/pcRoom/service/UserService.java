@@ -47,9 +47,9 @@ public class UserService {
                 .toList();
     } // 모든 회원 정보 출력
 
-    public void putMenuList(List<MenuDto> selectedMenus) {
+    public void putMenuList(List<MenuDto> selectedMenus) throws Exception {
         Map<String, Integer> menuFrequencyMap = new HashMap<>();
-
+        String word = null;
         for (MenuDto menuDto : selectedMenus) {
             String menuName = menuDto.getMenuName();
             menuFrequencyMap.put(menuName, menuFrequencyMap.getOrDefault(menuName, 0) + 1);
@@ -61,12 +61,13 @@ public class UserService {
             if(frequency != 0){ //빈도수가 0이 아닌 메뉴만
                 Menu menu = menuRepository.findBymenuName(menuName); //메뉴이름에 맞는 메뉴데이터 가져옴
                 Long menuId= menu.getMenuId(); // 메뉴이름에 맞는 메뉴아이디 가져옴
-                Sell sell = new Sell(menuId , frequency);
-                sellRepository.save(sell);
                 adminService.minusSellAmountToMenuAmount(menuId , frequency);
+                if(menu.getMenuAmount() > frequency){
+                    Sell sell = new Sell(menuId , frequency);
+                    sellRepository.save(sell);
+                } //주문할 수량 > 재고 일때 작동안되게끔
             }
             // 메뉴이름 , 빈도 저장
         }
-
     } // 주문 들어온 메뉴들 db에 저장
 }

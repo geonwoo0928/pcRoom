@@ -1,11 +1,3 @@
-// function addToOrder(clickedButton) {
-//    var orderView = document.querySelector('.menu-order-view');
-//    var menuName = clickedButton.querySelector(".menuName").value;
-//    var menuPrice = clickedButton.querySelector(".menuPrice").value;
-//    orderView.innerHTML += "<div>" + menuName + " - " + menuPrice + "원</div>";
-//}// 메뉴 클릭하면 주문내역에 표시해주는 코드
-
-
 // 선택한 메뉴를 저장할 배열
 var selectedMenus = [];
 
@@ -14,24 +6,55 @@ function addToOrder(button) {
     var menuName = button.querySelector('.menuName').value;
     var menuPrice = button.querySelector('.menuPrice').value;
 
-    // 선택한 메뉴를 배열에 추가
-    selectedMenus.push({ menuName: menuName, menuPrice: menuPrice });
+    // 배열에서 메뉴 찾기
+    var existingMenu = selectedMenus.find(menu => menu.menuName === menuName);
+
+    if (existingMenu) {
+        // 메뉴가 이미 선택된 경우 수량만 증가
+        existingMenu.quantity += 1;
+    } else {
+        // 새 메뉴 추가
+        selectedMenus.push({ menuName: menuName, menuPrice: menuPrice, quantity: 1 });
+    }
 
     // 선택한 메뉴를 화면에 표시
     updateSelectedMenu();
 }
+
+
 
 // 선택한 메뉴를 화면에 표시하는 함수
 function updateSelectedMenu() {
     var selectedMenuDiv = document.getElementById('menu-order-view');
     selectedMenuDiv.innerHTML = ''; // 기존의 내용을 지우고 다시 그림
 
-    selectedMenus.forEach(function(menu) {
+    selectedMenus.forEach(function(menu, index) {
         var menuDiv = document.createElement('div');
-        menuDiv.textContent = menu.menuName + ' - ' + menu.menuPrice + '원';
+        menuDiv.className = 'order-item';
+        menuDiv.innerHTML = `
+            <div>
+                <img src="/img/${menu.menuName}.jpg" alt="${menu.menuName}" style="width:30%; height:20%;">
+                ${menu.menuName} - ${menu.menuPrice}원
+            </div>
+            <input type="number" value="${menu.quantity}" min="1" class="menu-quantity" onchange="updateQuantity(this, ${index})">
+            <button onclick="removeMenuItem(${index})" class="menu-cancel-btn">X</button>
+        `;
         selectedMenuDiv.appendChild(menuDiv);
     });
 }
+
+// 메뉴 수량 업데이트 함수
+function updateQuantity(input, index) {
+    var quantity = parseInt(input.value);
+    selectedMenus[index].quantity = quantity;  // 배열 내 메뉴 수량 업데이트
+}
+
+// 메뉴 삭제 함수
+function removeMenuItem(index) {
+    selectedMenus.splice(index, 1);  // 배열에서 메뉴 제거
+    updateSelectedMenu();  // 화면 업데이트
+}
+
 
 // 구매하기 버튼을 눌렀을 때 호출되는 함수
 function submitOrder() {
@@ -40,12 +63,16 @@ function submitOrder() {
     xhr.open('POST', '/user/userMenu', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-            // 요청이 성공적으로 처리됐을 때 수행할 작업
-            console.log('주문이 성공적으로 저장되었습니다.');
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                console.log('주문이 성공적으로 저장되었습니다.');
+                alert('구매가 완료되었습니다.'); // 성공 메시지 표시
+            } else {
+                console.error('주문 처리 중 오류가 발생했습니다.');
+                alert(JSON.parse(xhr.responseText).error); // 서버에서 보낸 오류 메시지 표시
+            }
         }
     };
-
     xhr.send(JSON.stringify(selectedMenus));
 
     // 선택한 메뉴 배열 초기화
@@ -54,3 +81,4 @@ function submitOrder() {
     // 선택한 메뉴 화면 초기화
     updateSelectedMenu();
 }
+

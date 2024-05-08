@@ -19,6 +19,7 @@ body{
     background-color: #ffffff;
     text-align: center;
     padding-bottom : 20px;
+    border-radius : 30px;
     display: flex; /* 수평으로 정렬하기 위해 flex 사용 */
     justify-content: space-around; /* 항목을 동일한 간격으로 정렬 */
 }
@@ -44,7 +45,7 @@ body{
 
 .menu-table {
     margin-left : 32px;
-    margin-top : 50px;
+    margin-top : 25px;
     display: flex;
     justify-content: center;
 }
@@ -82,8 +83,11 @@ body{
 
 .menu-order-view {
     margin-top : 10px;
+    padding-top : 10px;
     width : 95%;
     height : 50%;
+    text-align : center;
+    font-size : 20px;
     background-color : #ffffff;
     border-radius : 10px;
 }
