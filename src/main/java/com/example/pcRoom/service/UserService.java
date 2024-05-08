@@ -5,10 +5,13 @@ import com.example.pcRoom.dto.SellDto;
 import com.example.pcRoom.dto.UsersDto;
 import com.example.pcRoom.entity.Menu;
 import com.example.pcRoom.entity.Sell;
+import com.example.pcRoom.entity.Users;
 import com.example.pcRoom.repository.MenuRepository;
 import com.example.pcRoom.repository.SellRepository;
 import com.example.pcRoom.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -69,4 +72,10 @@ public class UserService {
         }
 
     } // 주문 들어온 메뉴들 db에 저장
+
+
+
+    public Page<Users> pagingList(Pageable pageable) {
+        return usersRepository.findAll(pageable);
+    }
 }
