@@ -11,8 +11,8 @@ body {
 .content {
     margin-bottom: 100px; /* 아래쪽 여백 */
     margin-top: 50px; /* 위쪽에 여백 */
-    margin-left: 300px; /* 왼쪽 여백 */
-    margin-right: 300px; /* 오른쪽에 여백 */
+    margin-left: 400px; /* 왼쪽 여백 */
+    margin-right: 200px; /* 오른쪽에 여백 */
 }
 
 /* 판매 내역 */
@@ -26,7 +26,7 @@ body {
 /* 카드 */
 .card {
     width: 500px; /* 카드의 너비 */
-    padding: 10px; /* 카드 내부 여백 */
+    padding: 5px; /* 카드 내부 여백 */
     border: 1px solid #ccc; /* 외곽선 */
     display: flex;
     flex-direction: row; /* 플렉스 방향을 수평으로 설정 */
@@ -69,4 +69,10 @@ body {
 
 .text-color {
     color: #00008B;
+}
+
+.pagination-center {
+  display: flex;
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
 }

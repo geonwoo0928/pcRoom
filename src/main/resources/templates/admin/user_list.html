@@ -4,32 +4,59 @@
       layout:decorate="~{layouts/admin_layout}">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/table.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/table.css}">
     <title>회원 목록</title>
 </head>
 <body>
 <div class="content" layout:fragment="content">
     <table>
-        <tr>
-            <th>회원 ID</th>
-            <th>회원 이름</th>
-            <th>남은 잔액</th>
-            <th>총 사용 금액</th>
-            <th colspan="2"></th>
-        </tr>
-        <tr th:each="user : ${usersDto}" th:object="${user}">
-            <td th:text="*{userId}">회원 ID</td>
-            <td th:text="*{name}">회원 이름</td>
-            <td th:text="*{money}">남은 잔액</td>
-            <td th:text="*{money}">총 사용 금액</td>
-            <td>
-                <button>수정</button>
-            </td>
-            <td>
-                <button>삭제</button>
-            </td>
-        </tr>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>회원 ID</th>
+                <th>회원 이름</th>
+                <th>남은 잔액</th>
+                <th>총 사용 금액</th>
+                <th colspan="2"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user, userStat : ${paging}" th:object="${user}">
+                <td th:text="${userStat.index + 1}">번호</td>
+                <td th:text="*{userId}">회원 ID</td>
+                <td th:text="*{name}">회원 이름</td>
+                <td th:text="*{money}">남은 잔액</td>
+                <td th:text="*{money}">총 사용 금액</td>
+                <td>
+                    <button>수정</button>
+                </td>
+                <td>
+                    <button>삭제</button>
+                </td>
+            </tr>
+        </tbody>
     </table>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${paging.number} <= 0? 'disabled'">
+                <a class="page-link" th:href="@{/admin/users(page=${paging.number -1})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <th:block th:each="pageNumber : ${paginationBarNumbers}">
+                <li class="page-item"><a class="page-link" th:href="@{/admin/users(page=${pageNumber})}"
+                                         th:text="${pageNumber+1}">1</a></li>
+            </th:block>
+
+            <li class="page-item" th:classappend="${paging.number + 1 == paging.totalPages} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/users(page=${paging.number + 1})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 </body>
 </html>

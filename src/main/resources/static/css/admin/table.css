@@ -1,0 +1,31 @@
+table {
+    margin-bottom: 100px;
+    margin-top: 50px;
+    margin-left: 25%;
+}
+
+thead{
+    background-color: #E5F0FF;
+    border-radius: 20px 0 0 20px;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #F5F9FF;
+}
+
+th, td {
+  padding: 0.6rem;
+  min-width: 10rem;
+  text-align: left;
+  margin: 0;
+}
+
+.pagination{
+    justify-content: center;
+}
+
+.total-row {  /* 총 매출 */
+            font-weight: 900;  /* 텍스트 두껍게 */
+            color: #BA55D3;  /* 텍스트 색상 */
+            text-align: center;  /* 텍스트 중앙 정렬 */
+}

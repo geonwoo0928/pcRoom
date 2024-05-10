@@ -1,11 +1,19 @@
 package com.example.pcRoom.controller;
 
+import com.example.pcRoom.dto.BestSellerDto;
 import com.example.pcRoom.dto.MenuDto;
 import com.example.pcRoom.dto.SellDto;
 import com.example.pcRoom.dto.UsersDto;
+import com.example.pcRoom.entity.Sell;
+import com.example.pcRoom.entity.Users;
 import com.example.pcRoom.service.AdminService;
+import com.example.pcRoom.service.PagingService;
 import com.example.pcRoom.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +25,11 @@ import java.util.List;
 public class PcController {
     private final AdminService adminService;
     private final UserService userService;
-    public PcController(AdminService adminService, UserService userService) {
+    private final PagingService pagingService;
+    public PcController(AdminService adminService, UserService userService, PagingService pagingList, PagingService pagingService) {
         this.adminService = adminService;
         this.userService = userService;
+        this.pagingService = pagingService;
     }
 
 //    User
@@ -29,7 +39,6 @@ public class PcController {
 
         return "user/user_main";
     }
-
 
     @GetMapping("/user/userMenu")
     public String userMenu(Model model){
@@ -46,23 +55,58 @@ public class PcController {
     } //[음료]메뉴판으로 이동
 
 
+//    -----------------------admin------------------
 
-//    admin
+//    @GetMapping("/admin/users")
+//    public String adminMain(Model model) {
+//        List<UsersDto> usersDtoList = userService.usersList();
+//        model.addAttribute("usersDto", usersDtoList);
+//        return "admin/user_list";
+//    }
 
     @GetMapping("/admin/users")
-    public String adminMain(Model model) {
-        List<UsersDto> usersDtoList = userService.usersList();
-        model.addAttribute("usersDto", usersDtoList);
+    public String testView(Model model,
+                           @PageableDefault(page = 0, size = 10, sort = "userId",
+                                   direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Users> paging = userService.pagingList(pageable);
+
+        int totalPage = paging.getTotalPages();
+        List<Integer> barNumbers = pagingService.getPaginationBarNumbers(
+                pageable.getPageNumber(), totalPage);
+        model.addAttribute("paginationBarNumbers", barNumbers);
+
+        model.addAttribute("paging", paging);
         return "admin/user_list";
     }
 
     @GetMapping("/admin/sell")
-    public String sell(Model model) {
-        List<SellDto> sellDtoList = adminService.sell();
-        List<SellDto> total = adminService.total();
+    public String sell(Model model,
+                       @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        // 페이징된 데이터 가져오기
+        Page<Sell> paging = adminService.pagingList(pageable);
+
+        // 현재 페이지의 SellDto 목록
+        List<SellDto> sellDtoList = adminService.sell(paging);
+
+        // 모델에 데이터 추가
         model.addAttribute("sellDto", sellDtoList);
-        model.addAttribute("total", total);
+        model.addAttribute("paging", paging);
+
+        // 페이지네이션 바 정보 추가
+        List<Integer> barNumbers = pagingService.pageNumbers(pageable.getPageNumber(), paging.getTotalPages());
+        model.addAttribute("barNumbers", barNumbers);
+
         return "admin/sell";
     }
+    @GetMapping("/admin/sales")
+    public String sales(Model model) {
+        List<BestSellerDto> bestSellers = adminService.getBestSellers();
+        model.addAttribute("best", bestSellers);
 
+        // 전체 매출
+        List<SellDto> total = adminService.total();
+        model.addAttribute("total", total);
+
+        return "/admin/sales";
+    }
 }
