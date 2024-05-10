@@ -28,8 +28,8 @@ public class UserService {
     @Autowired
     AdminService adminService;
 
-    public List<MenuDto> showAllMenu() {
-        List<Menu> menuList = menuRepository.findAll();
+    public List<MenuDto> showAllMenuKind(String kind) {
+        List<Menu> menuList = menuRepository.findBymenuKind(kind);
         List<MenuDto> menuDtoList = new ArrayList<>();
         for(Menu menu : menuList){
             menuDtoList.add(

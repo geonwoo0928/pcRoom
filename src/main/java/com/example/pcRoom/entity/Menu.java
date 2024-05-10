@@ -19,4 +19,6 @@ public class Menu {
 
     @Column(nullable = false)
     private int menuPrice; //메뉴가격
+
+    private String menuKind; //메뉴종류 (라면,음료,간식,과자)
 }

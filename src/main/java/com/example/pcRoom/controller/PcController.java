@@ -33,10 +33,17 @@ public class PcController {
 
     @GetMapping("/user/userMenu")
     public String userMenu(Model model){
-        List<MenuDto> menuDtoList = userService.showAllMenu();
+        List<MenuDto> menuDtoList = userService.showAllMenuKind("라면");
         model.addAttribute("menuDto" , menuDtoList);
         return "/user/user_menu";
-    } //메뉴판으로 이동
+    } //[라면]메뉴판으로 이동
+
+    @GetMapping("/user/userMenu2")
+    public String userMenu2(Model model){
+        List<MenuDto> menuDtoList = userService.showAllMenuKind("음료");
+        model.addAttribute("menuDto" , menuDtoList);
+        return "/user/user_menu_drink";
+    } //[음료]메뉴판으로 이동
 
 
 

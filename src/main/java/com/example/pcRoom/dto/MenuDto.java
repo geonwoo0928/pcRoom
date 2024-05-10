@@ -21,13 +21,16 @@ public class MenuDto {
     private int menuAmount;
     private int menuPrice;
 
+    private String menuKind;
+
     // entity --> dto
     public static MenuDto fromMenuEntity(Menu menu) {
         return new MenuDto(
                 menu.getMenuId(),
                 menu.getMenuName(),
                 menu.getMenuAmount(),
-                menu.getMenuPrice()
+                menu.getMenuPrice(),
+                menu.getMenuKind()
         );
     }
 }

@@ -28,19 +28,49 @@ function updateSelectedMenu() {
     var selectedMenuDiv = document.getElementById('menu-order-view');
     selectedMenuDiv.innerHTML = ''; // 기존의 내용을 지우고 다시 그림
 
+    var totalSum = 0; // 총 금액을 저장할 변수
+    var formatter = new Intl.NumberFormat('ko-KR', { // 한국 통화 형식
+            style: 'decimal',
+            maximumFractionDigits: 0
+        });
+
     selectedMenus.forEach(function(menu, index) {
         var menuDiv = document.createElement('div');
         menuDiv.className = 'order-item';
+        var totalPrice = menu.menuPrice * menu.quantity; // 총 가격 계산
+        totalSum += totalPrice; // 총 금액에 추가
+        var formattedPrice = formatter.format(totalPrice); // 포맷된 가격
+
         menuDiv.innerHTML = `
-            <div>
-                <img src="/img/${menu.menuName}.jpg" alt="${menu.menuName}" style="width:30%; height:20%;">
-                ${menu.menuName} - ${menu.menuPrice}원
+            <div class="ordered-menu" style="display: flex; width: 100%; align-items: center;">
+                <span><img src="/img/${menu.menuName}.jpg" alt="${menu.menuName}" style="width:100px; height:20%;">${menu.menuName}</span>
+                <span style="padding-right : 5px; "><button onclick="removeMenuItem(${index})" class="menu-cancel-btn">⨉</button></span>
             </div>
-            <input type="number" value="${menu.quantity}" min="1" class="menu-quantity" onchange="updateQuantity(this, ${index})">
-            <button onclick="removeMenuItem(${index})" class="menu-cancel-btn">X</button>
+            <div class="quantity-controls">
+            <span>
+                <button onclick="changeQuantity(${index}, -1)">-</button>
+                <span>${menu.quantity}</span>
+                <button onclick="changeQuantity(${index}, 1)">+</button>
+            </span>
+            <span>${formattedPrice}원</span>
+            </div>
         `;
         selectedMenuDiv.appendChild(menuDiv);
     });
+    // 총 금액을 order-price-total 요소에 업데이트
+        document.getElementById('total-price').innerText = formatter.format(totalSum);
+}
+
+
+function changeQuantity(index, delta) {
+    var menu = selectedMenus[index];
+    var newQuantity = menu.quantity + delta;
+    if (newQuantity < 1) {
+        alert('최소 주문 수량은 1개입니다.');
+        newQuantity = 1;
+    }
+    menu.quantity = newQuantity;
+    updateSelectedMenu(); // UI 갱신
 }
 
 // 메뉴 수량 업데이트 함수
@@ -81,4 +111,6 @@ function submitOrder() {
     // 선택한 메뉴 화면 초기화
     updateSelectedMenu();
 }
+
+
 
