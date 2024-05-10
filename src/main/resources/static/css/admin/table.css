@@ -23,3 +23,9 @@ th, td {
 .pagination{
     justify-content: center;
 }
+
+.total-row {  /* 총 매출 */
+            font-weight: 900;  /* 텍스트 두껍게 */
+            color: #BA55D3;  /* 텍스트 색상 */
+            text-align: center;  /* 텍스트 중앙 정렬 */
+}

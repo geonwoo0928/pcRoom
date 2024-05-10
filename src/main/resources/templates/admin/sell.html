@@ -4,9 +4,8 @@
       layout:decorate="~{layouts/admin_layout}">
 <head>
     <meta charset="UTF-8">
-    <title>주문확인서 , 매출확인</title>
     <link rel="stylesheet" th:href="@{/css/admin_sell.css}">
-    <title>주문현황 , 매출확인</title>
+    <title>주문현황</title>
 </head>
 <body>
 <div class="content" layout:fragment="content">
@@ -37,9 +36,29 @@
             </div>
         </div>
         <div class="h4 pb-2 mb-4 text-color border-bottom border-dark text-center"></div>
-        <div th:each="total : ${total}" th:object="${total}">
-            <div class="total" th:text="'총 매출 ➡️' + ' ' + *{total} + '원'"></div> <!--총 매출-->
-        </div>
+        <nav aria-label="Page navigation example" class="pagination-center">  <!-- 중앙 정렬을 위해 클래스 추가 -->
+            <ul class="pagination">
+                <!-- 이전 페이지 -->
+                <li class="page-item" th:classappend="${paging.number <= 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/sell(page=${paging.number - 1})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <!-- 페이지 번호 표시 -->
+                <th:block th:each="pageNumber : ${barNumbers}">
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{/admin/sell(page=${pageNumber})}"
+                           th:text="${pageNumber + 1}">페이지</a>
+                    </li>
+                </th:block>
+                <!-- 다음 페이지 -->
+                <li class="page-item" th:classappend="${paging.number + 1 >= paging.totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/sell(page=${paging.number + 1})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>
 </body>
