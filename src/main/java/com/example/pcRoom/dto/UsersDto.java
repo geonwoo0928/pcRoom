@@ -1,5 +1,6 @@
 package com.example.pcRoom.dto;
 
+import com.example.pcRoom.constant.Status;
 import com.example.pcRoom.entity.Users;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
@@ -14,7 +15,7 @@ public class UsersDto {
     private String name;
     private String password;
     private int money;
-    private String status; //관리자 , 일반
+    private Status status; //관리자 , 일반
 
 
 //    Entity를 Dto로 변환
