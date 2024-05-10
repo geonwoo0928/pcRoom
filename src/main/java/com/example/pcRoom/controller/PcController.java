@@ -1,8 +1,10 @@
 package com.example.pcRoom.controller;
 
+import com.example.pcRoom.dto.BestSellerDto;
 import com.example.pcRoom.dto.MenuDto;
 import com.example.pcRoom.dto.SellDto;
 import com.example.pcRoom.dto.UsersDto;
+import com.example.pcRoom.entity.Sell;
 import com.example.pcRoom.entity.Users;
 import com.example.pcRoom.service.AdminService;
 import com.example.pcRoom.service.PagingService;
@@ -38,14 +40,12 @@ public class PcController {
         return "user/user_main";
     }
 
-
     @GetMapping("/user/userMenu")
     public String userMenu(Model model){
         List<MenuDto> menuDtoList = userService.showAllMenu();
         model.addAttribute("menuDto" , menuDtoList);
         return "/user/user_menu";
     } //메뉴판으로 이동
-
 
 
 //    -----------------------admin------------------
@@ -73,12 +73,33 @@ public class PcController {
     }
 
     @GetMapping("/admin/sell")
-    public String sell(Model model) {
-        List<SellDto> sellDtoList = adminService.sell();
-        List<SellDto> total = adminService.total();
+    public String sell(Model model,
+                       @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        // 페이징된 데이터 가져오기
+        Page<Sell> paging = adminService.pagingList(pageable);
+
+        // 현재 페이지의 SellDto 목록
+        List<SellDto> sellDtoList = adminService.sell(paging);
+
+        // 모델에 데이터 추가
         model.addAttribute("sellDto", sellDtoList);
-        model.addAttribute("total", total);
+        model.addAttribute("paging", paging);
+
+        // 페이지네이션 바 정보 추가
+        List<Integer> barNumbers = pagingService.pageNumbers(pageable.getPageNumber(), paging.getTotalPages());
+        model.addAttribute("barNumbers", barNumbers);
+
         return "admin/sell";
     }
+    @GetMapping("/admin/sales")
+    public String sales(Model model) {
+        List<BestSellerDto> bestSellers = adminService.getBestSellers();
+        model.addAttribute("best", bestSellers);
 
+        // 전체 매출
+        List<SellDto> total = adminService.total();
+        model.addAttribute("total", total);
+
+        return "/admin/sales";
+    }
 }

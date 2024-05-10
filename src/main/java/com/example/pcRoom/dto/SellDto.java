@@ -4,6 +4,8 @@ import com.example.pcRoom.entity.Sell;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 public class SellDto {
@@ -16,6 +18,7 @@ public class SellDto {
     private MenuDto menuDto;
     private UsersDto usersDto;
     private int total;
+
 
     public SellDto(Long id, String userId, Long menuId, int sellAmount, MenuDto menuDto, UsersDto usersDto) {
         this.id = id;
@@ -59,4 +62,5 @@ public class SellDto {
                 total
         );
     }
+
 }

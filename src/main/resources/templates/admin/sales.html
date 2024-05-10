@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin_layout}">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/admin/table.css}">
+    <title>매출확인</title>
+</head>
+<body>
+<div class="content" layout:fragment="content">
+    <table>
+        <tr>
+            <th style="color: #FF00FF">판매순위</th>
+            <th>메뉴이름</th>
+            <th>판매량</th>
+        </tr>
+        <tr th:each="b: ${best}" th:object="${b}">
+            <td th:text="*{rank}"></td>
+            <td th:text="*{menuDto.menuName}"></td>
+            <td th:text="*{sumSellAmount} + '개'"></td>
+        </tr>
+        <!--총 매출-->
+        <tr th:each="total : ${total}" th:object="${total}">
+            <td class="total-row" colspan="3" th:text="'💸 총 매출 ➡️' + ' ' + *{total} + '원 입니다 💜'"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
