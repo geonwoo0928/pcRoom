@@ -1,7 +1,7 @@
 package com.example.pcRoom.service;
 
+import com.example.pcRoom.config.PrincipalDetails;
 import com.example.pcRoom.dto.MenuDto;
-import com.example.pcRoom.dto.SellDto;
 import com.example.pcRoom.dto.UsersDto;
 import com.example.pcRoom.entity.Menu;
 import com.example.pcRoom.entity.Sell;
@@ -12,12 +12,11 @@ import com.example.pcRoom.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -51,28 +50,38 @@ public class UserService {
     } // 모든 회원 정보 출력
 
     public void putMenuList(List<MenuDto> selectedMenus) throws Exception {
-        Map<String, Integer> menuFrequencyMap = new HashMap<>();
-        String word = null;
+
+        //PrincipalDetails 에서 유저아이디 가져오는 코드
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = null;
+        if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
+            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+            currentUserName = principalDetails.getUsername();
+        }
+        //PrincipalDetails 에서 유저아이디 가져오는 코드
+
+        Optional<Users> userOptional = usersRepository.findById(currentUserName);
+        if (!userOptional.isPresent()) {
+            throw new Exception("사용자를 찾을 수 없습니다.");
+        }
+        Users user = userOptional.get();
+        int money = user.getMoney(); //회원 잔액
+
         for (MenuDto menuDto : selectedMenus) {
             String menuName = menuDto.getMenuName();
-            menuFrequencyMap.put(menuName, menuFrequencyMap.getOrDefault(menuName, 0) + 1);
-        } //메뉴이름 추출 , 빈도 계산
-
-        for (Map.Entry<String, Integer> entry : menuFrequencyMap.entrySet()) {
-            String menuName = entry.getKey();
-            int frequency = entry.getValue();
-            if(frequency != 0){ //빈도수가 0이 아닌 메뉴만
-                Menu menu = menuRepository.findBymenuName(menuName); //메뉴이름에 맞는 메뉴데이터 가져옴
-                Long menuId= menu.getMenuId(); // 메뉴이름에 맞는 메뉴아이디 가져옴
-                adminService.minusSellAmountToMenuAmount(menuId , frequency);
-                if(menu.getMenuAmount() > frequency){
-                    Sell sell = new Sell(menuId , frequency);
-                    sellRepository.save(sell);
-                } //주문할 수량 > 재고 일때 작동안되게끔
+            int quantity = menuDto.getQuantity();
+            Menu menu = menuRepository.findBymenuName(menuName); //메뉴이름에 맞는 메뉴데이터 가져옴
+            Long menuId = menu.getMenuId(); // 메뉴이름에 맞는 메뉴아이디 가져옴
+            if (menu.getMenuAmount() >= quantity && money >= (quantity * menu.getMenuPrice())) { // 재고 >= 주문할 수량 일때만
+                money = money - (quantity * menu.getMenuPrice()); //현재잔액 - 주문금액
+                user.setMoney(money); // 현재잔액 - 주문금액 entity에 저장
+                usersRepository.save(user); //db에 저장
+                adminService.minusSellAmountToMenuAmount(menuId, quantity);
+                Sell sell = new Sell(menuId, quantity, currentUserName);
+                sellRepository.save(sell);
             }
-            // 메뉴이름 , 빈도 저장
-        }
-    } // 주문 들어온 메뉴들 db에 저장
+        } //메뉴이름 추출 , 빈도 계산
+    }
 
 
 

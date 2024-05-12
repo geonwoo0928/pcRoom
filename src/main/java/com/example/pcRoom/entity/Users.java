@@ -4,17 +4,19 @@ import com.example.pcRoom.constant.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class Users {
 
     @Id
-    @Column(nullable = false, length = 20)
-    private String userId; //회원아이디
+    @Column(nullable = false, name = "user_id", length = 20)
+    private String username; //회원아이디
 
     @Column(nullable = false, length = 10)
     private String name; //회원이름

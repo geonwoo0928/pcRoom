@@ -12,6 +12,7 @@ function addToOrder(button) {
     if (existingMenu) {
         // 메뉴가 이미 선택된 경우 수량만 증가
         existingMenu.quantity += 1;
+        console.log(existingMenu.quantity);
     } else {
         // 새 메뉴 추가
         selectedMenus.push({ menuName: menuName, menuPrice: menuPrice, quantity: 1 });
@@ -88,6 +89,7 @@ function removeMenuItem(index) {
 
 // 구매하기 버튼을 눌렀을 때 호출되는 함수
 function submitOrder() {
+    console.log("Submitting the following menus:", JSON.stringify(selectedMenus));
     // 선택한 메뉴들을 서버에 전송
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/user/userMenu', true);

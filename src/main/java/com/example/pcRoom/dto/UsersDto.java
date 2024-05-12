@@ -21,7 +21,7 @@ public class UsersDto {
 //    Entity를 Dto로 변환
     public static UsersDto fromUserEntity(Users users) {
         return new UsersDto(
-                users.getUserId(),
+                users.getUsername(),
                 users.getName(),
                 users.getPassword(),
                 users.getMoney(),
@@ -32,7 +32,7 @@ public class UsersDto {
     //    Dto를 Entity로 변환
     public Users fromUserDto(UsersDto usersDto) {
         Users users = new Users();
-        users.setUserId(usersDto.getUserId());
+        users.setUsername(usersDto.getUserId());
         users.setName(usersDto.getName());
         users.setPassword(usersDto.getPassword());
         users.setMoney(usersDto.getMoney());

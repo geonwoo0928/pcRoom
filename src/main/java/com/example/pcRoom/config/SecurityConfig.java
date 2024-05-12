@@ -22,14 +22,13 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((request) -> request
                         .requestMatchers("/css/**" , "/js/**" , "/images/**").permitAll() //** 모든것
-                        .requestMatchers("/user/login" , "/user/register").permitAll()
+                        .requestMatchers("/login","/user/login" , "/user/register").permitAll()
                         .anyRequest().authenticated()) // 위에 폴더 외의 다른 폴더들은 인증받아야함 (anyRequest.authenticated)
 //                        .requestMatchers("/**").permitAll())
 
                 .formLogin((form)->form
-                        .loginPage("/user/login")
-                        .loginProcessingUrl("/login")
-//                        .usernameParameter("email") //email로 로그인할때 username 파라미터를 email로 한다 (@Id 가 email이 아니면 쿼리메소드로 findByEmail 만들어야함)
+                        .loginPage("/login")
+                        .loginProcessingUrl("/user/login")
                         .defaultSuccessUrl("/" , true)) //로그인 성공하며 나오는 url
                 .logout(out->out
                         .logoutSuccessUrl("/")

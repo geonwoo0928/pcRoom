@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Data
@@ -24,8 +25,9 @@ public class Sell {
 
     private int sellAmount; //판매수량
 
-    public Sell(Long menuId , int sellAmount){
+    public Sell(Long menuId , int sellAmount , String userId){
         this.menuId = menuId;
         this.sellAmount = sellAmount;
+        this.userId = userId;
     } //사용 UserService - putMenuList sell테이블에 메뉴 아이디 등록
 }

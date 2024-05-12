@@ -19,7 +19,7 @@ public class UserLoginRegisterService {
 
     public void createUser(CreateUserDto createUserDto){
         Users users = new Users();
-        users.setUserId(createUserDto.getUserId());
+        users.setUsername(createUserDto.getUserId());
         users.setName(createUserDto.getName());
         users.setPassword(passwordEncoder.encode(createUserDto.getPassword1()));
         users.setEmail(createUserDto.getEmail());

@@ -40,6 +40,3 @@ insert into users (user_id, name, password, email, phone_num, money, status) val
 insert into users (user_id, name, password, email, phone_num, money, status) values ('esatchel7', 'Edward', 'kD1.c4)5/Y$E0', 'ebeeching7@skype.com', '338-536-4448', 73231, 'USER');
 insert into users (user_id, name, password, email, phone_num, money, status) values ('mhenmarsh8', 'Mikol', 'yX5~''R*PZ', 'mmelmore8@archive.org', '531-641-7009', 90739, 'USER');
 insert into users (user_id, name, password, email, phone_num, money, status) values ('gfilipiak9', 'Gale', 'lT7&E1h3#B12pH', 'gmacalpin9@state.tx.us', '300-546-9737', 8182, 'USER');
-insert into sell(id, user_id, menu_id, sell_amount) values (1, 'ozllzlu', 2, 2);
-insert into sell(id, user_id, menu_id, sell_amount) values (2, 'ozllzlu', 4, 1);
-insert into sell(id, user_id, menu_id, sell_amount) values (3, 'wecky', 15, 3);

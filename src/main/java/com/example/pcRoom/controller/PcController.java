@@ -113,7 +113,7 @@ public class PcController {
         return "/admin/sales";
     }
 
-    @GetMapping("/user/login")
+    @GetMapping("/login")
     public String login(){
         return "/user/login";
     } //로그인페이지 (첫화면)
@@ -122,7 +122,7 @@ public class PcController {
     public String register(Model model){
         CreateUserDto createUserDto = new CreateUserDto();
         model.addAttribute(createUserDto);
-        return "user/register";
+        return "/user/register";
     } //회원가입페이지
 
     @PostMapping("/user/register")

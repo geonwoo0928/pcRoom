@@ -15,7 +15,7 @@
 </head>
 <body>
 <!--    Header fragment     -->
-<th:block th:replace="fragments/header::header"></th:block>
+<div th:replace="~{fragments/header::header}"></div>
 <!--    Content fragment    -->
 <th:block layout:fragment="content"></th:block>
 </body>
