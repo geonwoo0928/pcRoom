@@ -35,10 +35,20 @@ public class PcController {
 //    User
 
     @GetMapping("")
-    public String userMainPage(){
+    public String userLoginView(){
+        return "user/user_login";
+    } // 로그인 화면
+
+    @GetMapping("/user/signUp")
+    public String userSingInView(Model model){
+        return "user/user_signUp";
+    }// 회원가입
+
+    @GetMapping("/user")
+    public String userMainPage() {
 
         return "user/user_main";
-    }
+    } // 메인화면
 
     @GetMapping("/user/userMenu")
     public String userMenu(Model model){
@@ -56,13 +66,6 @@ public class PcController {
 
 
 //    -----------------------admin------------------
-
-//    @GetMapping("/admin/users")
-//    public String adminMain(Model model) {
-//        List<UsersDto> usersDtoList = userService.usersList();
-//        model.addAttribute("usersDto", usersDtoList);
-//        return "admin/user_list";
-//    }
 
     @GetMapping("/admin/users")
     public String testView(Model model,
