@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>회원정보 수정</title>
+    <script th:src="@{/js/menu.js}" th:inline="javascript"></script>
+    <link rel="stylesheet" th:href="@{/css/admin_sell.css}">
+</head>
+<body>
+    <div class="content" layout:fragment="content">
+        <form class="row g-3" id="form" name="form" th:action="@{/admin/userUpdate}" method="post" th:object="${userUpdate}">
+            <div class="col-12">
+                <input type="hidden" name="userNo" th:value="*{userNo}">
+            </div>
+            <div class="col-12">
+                <label for="userId" class="form-label">ID 변경</label>
+                <input type="text" class="form-control" id="userId" name="userId" placeholder="수정할 ID를 입력하세요">
+            </div>
+            <div class="col-12">
+                <label for="name" class="form-label">이름 변경</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="수정할 이름을 입력하세요">
+            </div>
+            <div class="col-12">
+                <label for="password" class="form-label">비밀번호 변경</label>
+                <input type="text" class="form-control" id="password" name="password" placeholder="수정할 비밀번호를 입력하세요">
+            </div>
+            <div class="col-12">
+                <label for="money" class="form-label">남은금액 변경</label>
+                <input type="text" class="form-control" id="money" name="money" placeholder="수정할 금액을 입력하세요">
+            </div>
+            <div class="col-12">
+                <input type="hidden" name="status" th:value="*{status}">
+            </div>
+            <div class="col-12">
+                <button type="button" class="btn btn-outline-info" onclick="check2()">수정</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

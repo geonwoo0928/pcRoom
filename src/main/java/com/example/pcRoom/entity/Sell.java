@@ -11,12 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Sell {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //주문번호
 
 
-    private String userId; //회원아이디
+    private String userNo; //회원번호
 
 
     private Long menuId; //메뉴 아이디
