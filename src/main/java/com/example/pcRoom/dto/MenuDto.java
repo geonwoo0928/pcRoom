@@ -42,5 +42,15 @@ public class MenuDto {
         this.menuPrice = menuPrice;
         this.menuKind = menuKind;
     }
+    public Menu fromMenuDto(MenuDto menuDto) {
+        Menu menu = new Menu();
+        menu.setMenuId(menuDto.getMenuId());
+        menu.setMenuName(menuDto.getMenuName());
+        menu.setMenuAmount(menuDto.getMenuAmount());
+        menu.setMenuPrice(menuDto.getMenuPrice());
+        menu.setMenuKind(menuDto.getMenuKind());
+
+        return menu;
+    }
 }
 

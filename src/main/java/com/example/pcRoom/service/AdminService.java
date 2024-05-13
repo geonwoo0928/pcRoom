@@ -10,6 +10,7 @@ import com.example.pcRoom.entity.Users;
 import com.example.pcRoom.repository.MenuRepository;
 import com.example.pcRoom.repository.SellRepository;
 import com.example.pcRoom.repository.UsersRepository;
+import org.apache.catalina.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.ToIntFunction;
 
 @Service
 public class AdminService {
@@ -36,7 +38,7 @@ public class AdminService {
 
         for (Sell s : paging.getContent()) {
             Menu menu = menuRepository.findById(s.getMenuId()).orElse(null);
-            Users users = usersRepository.findById(s.getUserId()).orElse(null);
+            Users users = usersRepository.findById(Long.valueOf(s.getUserNo())).orElse(null);
 
             MenuDto menuDto = MenuDto.fromMenuEntity(menu);
             UsersDto usersDto = UsersDto.fromUserEntity(users);
@@ -124,8 +126,45 @@ public class AdminService {
 
         // Collections.sort(bestSellers, Comparator.comparingInt(BestSellerDto::getRank));
         // 정렬 대상: bestSellers List
-        // 정렬 기준: BestSellerDto 의 getRank() int 값
+        // 정렬 기준: BestSellerDto 의 getRank() int(rank 타입이 int) 값
         // 오름차순 정렬: Comparator.comparingInt() -> 기본적으로 오름차순으로 정렬 됨
+    }
+
+    public List<MenuDto> menuAll() { // 메뉴 목록 보이기
+        List<Menu> menuList = menuRepository.findAll();
+        List<MenuDto> menuDtoList = new ArrayList<>();
+
+        for(Menu menu : menuList){
+            menuDtoList.add(MenuDto.fromMenuEntity(menu));
+        }
+        Collections.sort(menuDtoList, Comparator.comparingLong(MenuDto::getMenuId));
+        return menuDtoList;
+    }
+
+    public MenuDto updateView(Long menuId) {
+        return menuRepository.findById(menuId) // ID로 메뉴 찾기
+                .map(x -> MenuDto.fromMenuEntity(x)) // Entity -> dto
+                .orElse(null);
+    }
+
+    public void update(MenuDto menuDto) {
+        Menu menu = menuDto.fromMenuDto(menuDto); // dto -> entity
+        menuRepository.save(menu); // 저장
+    }
+
+    public UsersDto userUpdateView(Long userNo) {
+        return usersRepository.findById(userNo)
+                .map(x -> UsersDto.fromUserEntity(x))
+                .orElse(null);
+    }
+
+    public void userUpdate(UsersDto usersDto) {
+        Users users = usersDto.fromUserDto(usersDto);
+        usersRepository.save(users);
+    }
+
+    public void delete(Long userNo) {
+        usersRepository.deleteById(userNo);
     }
 }
 

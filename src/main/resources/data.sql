@@ -30,13 +30,3 @@ insert into menu(menu_id,menu_name,menu_amount,menu_price,menu_kind) values (29,
 insert into menu(menu_id,menu_name,menu_amount,menu_price,menu_kind) values (30,'콜라',10,1500,'음료');
 insert into menu(menu_id,menu_name,menu_amount,menu_price,menu_kind) values (31,'사이다',10,1500,'음료');
 insert into menu(menu_id,menu_name,menu_amount,menu_price,menu_kind) values (32,'미란다오렌지',10,1500,'음료');
-insert into users (user_id, name, password, email, phone_num, money, status) values ('ozllzlu', '김예진', 'jN3?hnk~uQ89J', 'phodge0@businessweek.com', '977-270-2280', 7571, 'ADMIN');
-insert into users (user_id, name, password, email, phone_num, money, status) values ('wecky', '우가연', 'vF3&{FWeUAdm<r', 'trupert1@wikipedia.org', '267-806-8349', 8029, 'USER');
-insert into users (user_id, name, password, email, phone_num, money, status) values ('dmosdill2', 'Dodie', 'pY9*>YGYY''', 'dlambrick2@google.co.jp', '294-980-8962', 4735, 'USER');
-insert into users (user_id, name, password, email, phone_num, money, status) values ('weakly3', 'Winn', 'wH5..y=~G', 'wrediers3@gravatar.com', '110-119-1778', 8013, 'USER');
-insert into users (user_id, name, password, email, phone_num, money, status) values ('jmungham4', 'Jermaine', 'mN5"vMo80o', 'jmcfarland4@usatoday.com', '989-244-5819', 550, 'USER');
-insert into users (user_id, name, password, email, phone_num, money, status) values ('rabel5', 'Rochell', 'lE2|5ZS}Z%', 'rdavall5@sina.com.cn', '669-191-5191', 11375, 'USER');
-insert into users (user_id, name, password, email, phone_num, money, status) values ('aingliby6', 'Alidia', 'xR7`O4''fg82u1N`>', 'ashimmings6@hp.com', '747-394-4105', 61284, 'USER');
-insert into users (user_id, name, password, email, phone_num, money, status) values ('esatchel7', 'Edward', 'kD1.c4)5/Y$E0', 'ebeeching7@skype.com', '338-536-4448', 73231, 'USER');
-insert into users (user_id, name, password, email, phone_num, money, status) values ('mhenmarsh8', 'Mikol', 'yX5~''R*PZ', 'mmelmore8@archive.org', '531-641-7009', 90739, 'USER');
-insert into users (user_id, name, password, email, phone_num, money, status) values ('gfilipiak9', 'Gale', 'lT7&E1h3#B12pH', 'gmacalpin9@state.tx.us', '300-546-9737', 8182, 'USER');

@@ -3,6 +3,7 @@ package com.example.pcRoom.entity;
 import com.example.pcRoom.constant.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,9 @@ import lombok.NoArgsConstructor;
 public class Users {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userNo;
+
     @Column(nullable = false, name = "user_id", length = 20)
     private String username; //회원아이디
 
@@ -34,12 +38,12 @@ public class Users {
     @Enumerated(EnumType.STRING)
     private Status status; //관리자 , 일반
 
-//    public Users(String userId, String name, String password, String email, String phoneNum, Status status) {
-//        this.userId = userId;
-//        this.name = name;
-//        this.password = password;
-//        this.email = email;
-//        this.phoneNum = phoneNum;
-//        this.status = status;
-//    }
+    public Users(Long userNo, String username, String name, String password, int money , Status status) {
+        this.userNo = userNo;
+        this.username = username;
+        this.name = name;
+        this.password = password;
+        this.money = money;
+        this.status = status;
+    }
 }

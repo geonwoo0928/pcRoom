@@ -12,12 +12,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Sell {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //주문번호
 
 
-    private String userId; //회원아이디
+    private Long userNo; //회원번호
 
 
     private Long menuId; //메뉴 아이디
@@ -25,9 +26,9 @@ public class Sell {
 
     private int sellAmount; //판매수량
 
-    public Sell(Long menuId , int sellAmount , String userId){
+    public Sell(Long menuId , int sellAmount , Long userNo){
         this.menuId = menuId;
         this.sellAmount = sellAmount;
-        this.userId = userId;
+        this.userNo = userNo;
     } //사용 UserService - putMenuList sell테이블에 메뉴 아이디 등록
 }

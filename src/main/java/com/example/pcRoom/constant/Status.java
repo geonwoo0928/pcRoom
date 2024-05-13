@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum Status {
     ADMIN("관리자"),
-    USER("손님");
+    USER("회원");
 
     private String status;
 

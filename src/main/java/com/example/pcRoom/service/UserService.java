@@ -60,11 +60,12 @@ public class UserService {
         }
         //PrincipalDetails 에서 유저아이디 가져오는 코드
 
-        Optional<Users> userOptional = usersRepository.findById(currentUserName);
+        Optional<Users> userOptional = usersRepository.findByUsername(currentUserName);
         if (!userOptional.isPresent()) {
             throw new Exception("사용자를 찾을 수 없습니다.");
         }
         Users user = userOptional.get();
+        Long userNo = user.getUserNo();
         int money = user.getMoney(); //회원 잔액
 
         for (MenuDto menuDto : selectedMenus) {
@@ -77,13 +78,11 @@ public class UserService {
                 user.setMoney(money); // 현재잔액 - 주문금액 entity에 저장
                 usersRepository.save(user); //db에 저장
                 adminService.minusSellAmountToMenuAmount(menuId, quantity);
-                Sell sell = new Sell(menuId, quantity, currentUserName);
+                Sell sell = new Sell(menuId, quantity, userNo);
                 sellRepository.save(sell);
             }
         } //메뉴이름 추출 , 빈도 계산
     }
-
-
 
     public Page<Users> pagingList(Pageable pageable) {
         return usersRepository.findAll(pageable);
