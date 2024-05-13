@@ -11,7 +11,7 @@ import java.util.List;
 public class SellDto {
 
     private Long id;
-    private String userId;
+    private String userNo;
     private Long menuId;
     private int sellAmount;
 
@@ -20,9 +20,9 @@ public class SellDto {
     private int total;
 
 
-    public SellDto(Long id, String userId, Long menuId, int sellAmount, MenuDto menuDto, UsersDto usersDto) {
+    public SellDto(Long id, String userNo, Long menuId, int sellAmount, MenuDto menuDto, UsersDto usersDto) {
         this.id = id;
-        this.userId = userId;
+        this.userNo = userNo;
         this.menuId = menuId;
         this.sellAmount = sellAmount;
         this.menuDto = menuDto;
@@ -36,7 +36,7 @@ public class SellDto {
     public static Sell dtoToEntity(SellDto sellDto){
         return new Sell(
                 sellDto.getId(),
-                sellDto.getUserId(),
+                sellDto.getUserNo(),
                 sellDto.getMenuId(),
                 sellDto.sellAmount
         );
@@ -45,7 +45,7 @@ public class SellDto {
     public static SellDto fromSellEntity(Sell form, MenuDto menuDto, UsersDto usersDto, int sellAmount) {
         return new SellDto(
                 form.getId(),
-                form.getUserId(),
+                form.getUserNo(),
                 form.getMenuId(),
                 form.getSellAmount(),
                 menuDto,

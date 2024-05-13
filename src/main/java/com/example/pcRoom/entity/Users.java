@@ -1,9 +1,6 @@
 package com.example.pcRoom.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -11,6 +8,9 @@ import lombok.Data;
 public class Users {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userNo;
+
     @Column(nullable = false, length = 20)
     private String userId; //회원아이디
 

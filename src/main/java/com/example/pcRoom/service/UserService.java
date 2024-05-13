@@ -74,8 +74,6 @@ public class UserService {
         }
     } // 주문 들어온 메뉴들 db에 저장
 
-
-
     public Page<Users> pagingList(Pageable pageable) {
         return usersRepository.findAll(pageable);
     }

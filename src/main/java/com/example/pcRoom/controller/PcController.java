@@ -26,6 +26,7 @@ public class PcController {
     private final AdminService adminService;
     private final UserService userService;
     private final PagingService pagingService;
+
     public PcController(AdminService adminService, UserService userService, PagingService pagingList, PagingService pagingService) {
         this.adminService = adminService;
         this.userService = userService;
@@ -35,22 +36,22 @@ public class PcController {
 //    User
 
     @GetMapping("")
-    public String userMainPage(){
+    public String userMainPage() {
 
         return "user/user_main";
     }
 
     @GetMapping("/user/userMenu")
-    public String userMenu(Model model){
+    public String userMenu(Model model) {
         List<MenuDto> menuDtoList = userService.showAllMenuKind("라면");
-        model.addAttribute("menuDto" , menuDtoList);
+        model.addAttribute("menuDto", menuDtoList);
         return "/user/user_menu";
     } //[라면]메뉴판으로 이동
 
     @GetMapping("/user/userMenu2")
-    public String userMenu2(Model model){
+    public String userMenu2(Model model) {
         List<MenuDto> menuDtoList = userService.showAllMenuKind("음료");
-        model.addAttribute("menuDto" , menuDtoList);
+        model.addAttribute("menuDto", menuDtoList);
         return "/user/user_menu_drink";
     } //[음료]메뉴판으로 이동
 
@@ -66,8 +67,8 @@ public class PcController {
 
     @GetMapping("/admin/users")
     public String testView(Model model,
-                           @PageableDefault(page = 0, size = 10, sort = "userId",
-                                   direction = Sort.Direction.DESC) Pageable pageable) {
+                           @PageableDefault(page = 0, size = 10, sort = "userNo",
+                                   direction = Sort.Direction.ASC) Pageable pageable) {
         Page<Users> paging = userService.pagingList(pageable);
 
         int totalPage = paging.getTotalPages();
@@ -98,6 +99,7 @@ public class PcController {
 
         return "admin/sell";
     }
+
     @GetMapping("/admin/sales")
     public String sales(Model model) {
         List<BestSellerDto> bestSellers = adminService.getBestSellers();
@@ -108,5 +110,44 @@ public class PcController {
         model.addAttribute("total", total);
 
         return "/admin/sales";
+    }
+
+    @GetMapping("/admin/menu")
+    public String menuAll(Model model) {
+        List<MenuDto> menuDtoList = adminService.menuAll();
+        model.addAttribute("menuList", menuDtoList);
+        return "/admin/menu";
+    }
+
+    @GetMapping("/admin/menuUpdate")
+    public String updateView(@RequestParam("updateMenuId") Long menuId, Model model) {
+        MenuDto menuDto = adminService.updateView(menuId);
+        model.addAttribute("menuUpdate", menuDto);
+        return "/admin/menuUpdate";
+    }
+
+    @PostMapping("/admin/menuUpdate")
+    public String update(@ModelAttribute("menuUpdate") MenuDto menuDto) {
+        adminService.update(menuDto);
+        return "redirect:/admin/menu";
+    }
+
+    @GetMapping("/admin/userUpdate")
+    public String userUpdateView(@RequestParam("updateUserNo") Long userNo, Model model) {
+        UsersDto usersDto = adminService.userUpdateView(userNo);
+        model.addAttribute("userUpdate", usersDto);
+        return "/admin/userUpdate";
+    }
+
+    @PostMapping("/admin/userUpdate")
+    public String userUpdate(@ModelAttribute("userUpdate") UsersDto usersDto) {
+        adminService.userUpdate(usersDto);
+        return "redirect:/admin/users";
+    }
+
+    @PostMapping("/admin/userDelete")
+    public String userDelete(@RequestParam("delete") Long userNo) {
+        adminService.delete(userNo);
+        return "redirect:/admin/users";
     }
 }
