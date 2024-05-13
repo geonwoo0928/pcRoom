@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/user_login_css.css}">
+    <title>Quokka's Login</title>
+</head>
+<body>
+    <u style="color: white; font-size: 100px; margin-left: 40px;">036</u>
+
+
+    <div class="bottomBox"></div>       <!-- 로그인 창 검은 배경 -->
+
+    <div class="context">
+
+        <span></span>
+        <span></span>
+
+        <span>
+            <form th:action="@{/user}" method="post">
+                <table>
+                    <tr>
+                        <td style="width: 100px; text-align: right;">
+                            <label for="id">아이디</label>
+                        </td>
+                        <td>
+                            <input type="text" id="id" name="id" class="loginInput"> <br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px; text-align: right;">
+                            <label for="password">비밀번호</label>
+                        </td>
+                        <td>
+                            <input type="password" id="password" name="password" class="loginInput">
+                        </td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <td><input type="submit" class="loginBtn" value="로그인"></td>
+                    </tr>
+                </table>
+            </form>
+                <table>
+                    <tr>
+                        <td>
+                            <form id="signUpForm" action="/user/signUp" method="get" target="_blank">
+                                <input type="submit" class="signUpBtn" value="회원가입">
+                            </form>
+                            <script>
+                                document.getElementById("signUpForm").addEventListener("submit", function(event) {
+                                    event.preventDefault(); // 기본 동작 중지
+
+                                    var popupWidth = 470;
+                                    var popupHeight = 400;
+                                    var left = (screen.width - popupWidth) / 2;
+                                    var top = (screen.height - popupHeight) / 2;
+
+                                    // 팝업 창을 생성 후 signIn 페이지 가운데에 위치 시킴
+                                    window.open(this.action, "signInPopup", "width=" + popupWidth + ",height=" + popupHeight + ",left=" + left + ",top=" + top);
+                                });
+                            </script>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <form th:action="@{/user/findAccount}" method="get">
+                                <input type="submit" class="findAccountBtn" value="아이디/비번찾기">
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+        </span>
+
+        <span>
+            <div class="noticeBox">
+                <b>1) 퇴실 시 꼭 사용 종료 버튼을 눌러주세요. <br>
+                    2) 유류과금 별도입니다. <br>
+                    3) 12개월 미로그인시 시간 삭제 됩니다.
+                </b>
+            </div>
+        </span>
+    </div>
+</body>
+</html>

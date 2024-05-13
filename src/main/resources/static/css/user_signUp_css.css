@@ -1,0 +1,74 @@
+body {
+    background-color: #F4F4F4;
+}
+
+.header {
+    background-color: #9b9da9;
+    height: 40px;
+    color: white;
+    font-weight: 700;
+    font-size: large;
+    padding-left: 15px;
+    line-height: 40px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 10px; /* 테이블 사이의 간격 설정 */
+}
+
+th {
+  color: white;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px 0;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 90%;
+    height: 25px;
+}
+
+.idCheckBtn, .submitBtn, .resetBtn {
+    display: inherit, block; /* 기본 스타일 제거 */
+    border-radius: 2px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: none;
+}
+
+.idCheckBtn {
+    background-color: #c9c9c9;
+    width: 80px;
+    height: 30px;
+ }
+
+ .submitBtn {
+    background-color: #19c6ef;
+    width: 90px;
+    height: 40px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+ }
+
+ .resetBtn {
+    background-color: #9d9d9d;
+    width: 90px;
+    height: 40px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+ }
+
+.bottomBtns{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 30px;
+}
