@@ -1,21 +1,22 @@
 package com.example.pcRoom.controller;
 
-import com.example.pcRoom.dto.BestSellerDto;
-import com.example.pcRoom.dto.MenuDto;
-import com.example.pcRoom.dto.SellDto;
-import com.example.pcRoom.dto.UsersDto;
+import com.example.pcRoom.dto.*;
 import com.example.pcRoom.entity.Sell;
 import com.example.pcRoom.entity.Users;
 import com.example.pcRoom.service.AdminService;
 import com.example.pcRoom.service.PagingService;
+import com.example.pcRoom.service.UserLoginRegisterService;
 import com.example.pcRoom.service.UserService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,11 +27,13 @@ public class PcController {
     private final AdminService adminService;
     private final UserService userService;
     private final PagingService pagingService;
+    private final UserLoginRegisterService userLoginRegisterService;
 
-    public PcController(AdminService adminService, UserService userService, PagingService pagingList, PagingService pagingService) {
+    public PcController(AdminService adminService, UserService userService, PagingService pagingList, PagingService pagingService , UserLoginRegisterService userLoginRegisterService) {
         this.adminService = adminService;
         this.userService = userService;
         this.pagingService = pagingService;
+        this.userLoginRegisterService = userLoginRegisterService;
     }
 
 //    User
@@ -115,6 +118,41 @@ public class PcController {
         return "/admin/sales";
     }
 
+    @GetMapping("/login")
+    public String login(){
+        return "/user/login";
+    } //로그인페이지 (첫화면)
+
+    @GetMapping("/user/register")
+    public String register(Model model){
+        CreateUserDto createUserDto = new CreateUserDto();
+        model.addAttribute(createUserDto);
+        return "/user/register";
+    } //회원가입페이지
+
+    @PostMapping("/user/register")
+    public String registerPost(@Valid @ModelAttribute("createUserDto") CreateUserDto createUserDto, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "/signup";
+        }
+
+        if (!(createUserDto.getPassword1().equals(createUserDto.getPassword2()))) {
+            bindingResult.rejectValue("password2", "password incorrect", "비밀번호가 일치하지 않습니다");
+            return "signUp";
+        }
+        try {
+            userLoginRegisterService.createUser(createUserDto);
+        } catch (DataIntegrityViolationException e) { //동일한 사용자
+            e.printStackTrace();
+            bindingResult.reject("signupFailed", "이미 등록된 사용자 입니다.");
+            return "signup";
+        } catch (Exception e) {
+            bindingResult.reject("signupFailed", e.getMessage());
+            return "signup";
+        }
+        return "redirect:/user/login";
+    }
     @GetMapping("/admin/menu")
     public String menuAll(Model model) {
         List<MenuDto> menuDtoList = adminService.menuAll();

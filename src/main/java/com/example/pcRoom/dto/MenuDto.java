@@ -22,6 +22,7 @@ public class MenuDto {
     private int menuPrice;
 
     private String menuKind;
+    private int quantity;
 
     // entity --> dto
     public static MenuDto fromMenuEntity(Menu menu) {
@@ -34,6 +35,13 @@ public class MenuDto {
         );
     }
 
+    public MenuDto(Long menuId, String menuName, int menuAmount, int menuPrice, String menuKind) {
+        this.menuId = menuId;
+        this.menuName = menuName;
+        this.menuAmount = menuAmount;
+        this.menuPrice = menuPrice;
+        this.menuKind = menuKind;
+    }
     public Menu fromMenuDto(MenuDto menuDto) {
         Menu menu = new Menu();
         menu.setMenuId(menuDto.getMenuId());
@@ -44,7 +52,5 @@ public class MenuDto {
 
         return menu;
     }
-
-
 }
 

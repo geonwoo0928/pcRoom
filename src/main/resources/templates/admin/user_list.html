@@ -24,7 +24,7 @@
         <tbody>
             <tr th:each="user, userStat : ${paging}" th:object="${user}">
                 <td th:text="*{userNo}">회원 번호</td>
-                <td th:text="*{userId}">회원 ID</td>
+                <td th:text="*{username}">회원 ID</td>
                 <td th:text="*{name}">회원 이름</td>
                 <td th:text="*{password}">회원 비밀번호</td>
                 <td th:text="*{money}">남은 잔액</td>

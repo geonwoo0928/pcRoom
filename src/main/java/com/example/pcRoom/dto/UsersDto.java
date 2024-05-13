@@ -1,5 +1,6 @@
 package com.example.pcRoom.dto;
 
+import com.example.pcRoom.constant.Status;
 import com.example.pcRoom.entity.Users;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
@@ -8,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class UsersDto {
 
     private Long userNo;
@@ -16,14 +16,27 @@ public class UsersDto {
     private String name;
     private String password;
     private int money;
-    private String status; //관리자 , 일반
+    private Status status; //관리자 , 일반
 
+    public UsersDto(){
+
+    }
+
+
+    public UsersDto(Long userNo, String userId, String name, String password, int money, Status status) {
+        this.userNo = userNo;
+        this.userId = userId;
+        this.name = name;
+        this.password = password;
+        this.money = money;
+        this.status = status;
+    }
 
     //    Entity를 Dto로 변환
     public static UsersDto fromUserEntity(Users users) {
         return new UsersDto(
                 users.getUserNo(),
-                users.getUserId(),
+                users.getUsername(),
                 users.getName(),
                 users.getPassword(),
                 users.getMoney(),
@@ -33,13 +46,13 @@ public class UsersDto {
 
     //    Dto를 Entity로 변환
     public Users fromUserDto(UsersDto usersDto) {
-        Users users = new Users();
-        users.setUserNo(usersDto.getUserNo());
-        users.setUserId(usersDto.getUserId());
-        users.setName(usersDto.getName());
-        users.setPassword(usersDto.getPassword());
-        users.setMoney(usersDto.getMoney());
-        users.setStatus(usersDto.getStatus());
-        return users;
+        return new Users(
+                usersDto.getUserNo(),
+                usersDto.getUserId(),
+                usersDto.getName(),
+                usersDto.getPassword(),
+                usersDto.getMoney(),
+                usersDto.getStatus()
+        );
     }
 }
