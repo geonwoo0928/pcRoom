@@ -6,32 +6,48 @@
     <title>쿼카 PC 회원가입</title>
 </head>
 <body>
-    <form th:action="@{/user/signUp}">
-        <div class="header">회원가입</div>
-        <table>
-                <tr>
-                    <td>아이디</td>
-                    <td><input type="text"></td>
-                    <td><input type="button" value="중복확인" class="idCheckBtn"></td>
-                </tr>
-                <tr>
-                    <td>이름</td>
-                    <td colspan="2"><input type="text"></td>
-                </tr>
-                <tr>
-                    <td>비밀번호</td>
-                    <td colspan="2"><input type="password"></td>
-                </tr>
-                <tr>
-                    <td>비밀번호 확인</td>
-                    <td colspan="2"><input type="password"></td>
-                </tr>
-        </table>
-        <div class="bottomBtns">
-            <input type="submit" value="가입완료" class="submitBtn">
-            <button type="reset" class="resetBtn">다시입력</button>
-        </div>
-
-    </form>
+<form id="frm" name="frm" th:action="@{/user/signUp}" method="post"
+      th:object="${dto}" class="container">
+    <div class="header">회원가입</div>
+    <table>
+        <tr>
+            <td>아이디</td>
+            <td><input id="username" name="userId" type="text" th:field="*{userId}"></td>
+            <td><input type="button" value="중복확인" class="idCheckBtn"></td>
+            <span class="error-class" th:errors="*{userId}"></span>
+        </tr>
+        <tr>
+            <td>이름</td>
+            <td colspan="2"><input name="name" type="text" th:field="*{name}"></td>
+        </tr>
+        <tr>
+            <td>비밀번호</td>
+            <td colspan="2"><input id="password1" name="password1" type="password" th:field="*{password1}"></td>
+            <span class="error-class" th:errors="*{password1}"></span>
+        </tr>
+        <tr>
+            <td>비밀번호 확인</td>
+            <td colspan="2"><input id="password2" name="password2" type="password" th:field="*{password2}"></td>
+            <span class="error-class" th:errors="*{password2}"></span>
+        </tr>
+        <tr>
+            <td>이메일</td>
+            <td colspan="2"><input id="email" name="email" type="email" th:field="*{email}"></td>
+            <span class="error-class" th:errors="*{email}"></span>
+        </tr>
+        <tr>
+            <td>전화번호</td>
+            <td colspan="2"><input type="text" th:field="*{phoneNum}"></td>
+        </tr>
+        <tr>
+            <td>관리자인증번호</td>
+            <td colspan="2"><input type="text" th:field="*{confirmedNum}"></td>
+        </tr>
+    </table>
+    <div class="bottomBtns">
+        <input type="submit" value="가입완료" class="submitBtn" onclick="check()">
+        <button type="reset" class="resetBtn">다시입력</button>
+    </div>
+</form>
 </body>
 </html>

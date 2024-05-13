@@ -1,5 +1,4 @@
 package com.example.pcRoom.config;
-//
 //import com.example.myBoard.service.PrincipalOauth2UserService;
 //import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,15 +20,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((request) -> request
-                        .requestMatchers("/css/**" , "/js/**" , "/images/**").permitAll() //** 모든것
-                        .requestMatchers("/login","/user/login" , "/user/register").permitAll()
+                        .requestMatchers("/css/**" , "/js/**" , "/img/**").permitAll() //** 모든것
+                        .requestMatchers("/user/login" , "/user/signUp").permitAll()
                         .anyRequest().authenticated()) // 위에 폴더 외의 다른 폴더들은 인증받아야함 (anyRequest.authenticated)
 //                        .requestMatchers("/**").permitAll())
 
                 .formLogin((form)->form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/user/login")
-                        .defaultSuccessUrl("/" , true)) //로그인 성공하며 나오는 url
+                        .loginPage("/user/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/user" , true)) //로그인 성공하며 나오는 url
                 .logout(out->out
                         .logoutSuccessUrl("/")
                         .logoutUrl("/logout"))

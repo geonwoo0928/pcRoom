@@ -38,20 +38,46 @@ public class PcController {
 
 //    User
 
-    @GetMapping("")
+    @GetMapping("/user/login")
     public String userLoginView(){
-        return "user/user_login";
+        return "/user/user_login";
     } // 로그인 화면
 
     @GetMapping("/user/signUp")
-    public String userSingInView(Model model){
+    public String userSignInView(Model model){
+        CreateUserDto createUserDto = new CreateUserDto();
+        model.addAttribute("dto" , createUserDto);
         return "user/user_signUp";
     }// 회원가입
+
+    @PostMapping("/user/signUp")
+    public String userSignPost(@Valid @ModelAttribute("dto") CreateUserDto createUserDto , BindingResult bindingResult){
+
+        if (bindingResult.hasErrors()) {
+            return "/user/signUp";
+        }
+
+        if (!(createUserDto.getPassword1().equals(createUserDto.getPassword2()))) {
+            bindingResult.rejectValue("password2", "password incorrect", "비밀번호가 일치하지 않습니다");
+            return "/user/signUp";
+        }
+        try {
+            userLoginRegisterService.createUser(createUserDto);
+        } catch (DataIntegrityViolationException e) { //동일한 사용자
+            e.printStackTrace();
+            bindingResult.reject("signupFailed", "이미 등록된 사용자 입니다.");
+            return "/user/signUp";
+        } catch (Exception e) {
+            bindingResult.reject("signupFailed", e.getMessage());
+            return "/user/signUp";
+        }
+        return "redirect:/user/login";
+    }
 
     @GetMapping("/user")
     public String userMainPage() {
 
-        return "user/user_main";
+        return "/user/user_main";
     } // 메인화면
 
     @GetMapping("/user/userMenu")
@@ -118,41 +144,41 @@ public class PcController {
         return "/admin/sales";
     }
 
-    @GetMapping("/login")
-    public String login(){
-        return "/user/login";
-    } //로그인페이지 (첫화면)
-
-    @GetMapping("/user/register")
-    public String register(Model model){
-        CreateUserDto createUserDto = new CreateUserDto();
-        model.addAttribute(createUserDto);
-        return "/user/register";
-    } //회원가입페이지
-
-    @PostMapping("/user/register")
-    public String registerPost(@Valid @ModelAttribute("createUserDto") CreateUserDto createUserDto, BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            return "/signup";
-        }
-
-        if (!(createUserDto.getPassword1().equals(createUserDto.getPassword2()))) {
-            bindingResult.rejectValue("password2", "password incorrect", "비밀번호가 일치하지 않습니다");
-            return "signUp";
-        }
-        try {
-            userLoginRegisterService.createUser(createUserDto);
-        } catch (DataIntegrityViolationException e) { //동일한 사용자
-            e.printStackTrace();
-            bindingResult.reject("signupFailed", "이미 등록된 사용자 입니다.");
-            return "signup";
-        } catch (Exception e) {
-            bindingResult.reject("signupFailed", e.getMessage());
-            return "signup";
-        }
-        return "redirect:/user/login";
-    }
+//    @GetMapping("/login")
+//    public String login(){
+//        return "/user/login";
+//    } //로그인페이지 (첫화면)
+//
+//    @GetMapping("/user/register")
+//    public String register(Model model){
+//        CreateUserDto createUserDto = new CreateUserDto();
+//        model.addAttribute(createUserDto);
+//        return "/user/register";
+//    } //회원가입페이지
+//
+//    @PostMapping("/user/register")
+//    public String registerPost(@Valid @ModelAttribute("createUserDto") CreateUserDto createUserDto, BindingResult bindingResult) {
+//
+//        if (bindingResult.hasErrors()) {
+//            return "/signup";
+//        }
+//
+//        if (!(createUserDto.getPassword1().equals(createUserDto.getPassword2()))) {
+//            bindingResult.rejectValue("password2", "password incorrect", "비밀번호가 일치하지 않습니다");
+//            return "signUp";
+//        }
+//        try {
+//            userLoginRegisterService.createUser(createUserDto);
+//        } catch (DataIntegrityViolationException e) { //동일한 사용자
+//            e.printStackTrace();
+//            bindingResult.reject("signupFailed", "이미 등록된 사용자 입니다.");
+//            return "signup";
+//        } catch (Exception e) {
+//            bindingResult.reject("signupFailed", e.getMessage());
+//            return "signup";
+//        }
+//        return "redirect:/user/login";
+//    }
     @GetMapping("/admin/menu")
     public String menuAll(Model model) {
         List<MenuDto> menuDtoList = adminService.menuAll();
