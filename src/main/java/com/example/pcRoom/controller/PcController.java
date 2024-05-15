@@ -1,5 +1,6 @@
 package com.example.pcRoom.controller;
 
+import com.example.pcRoom.config.PrincipalDetails;
 import com.example.pcRoom.dto.*;
 import com.example.pcRoom.entity.Sell;
 import com.example.pcRoom.entity.Users;
@@ -14,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,6 +39,8 @@ public class PcController {
         this.userLoginRegisterService = userLoginRegisterService;
     }
 
+
+
 //    User
 
     @GetMapping("/user/login")
@@ -43,36 +48,48 @@ public class PcController {
         return "/user/user_login";
     } // 로그인 화면
 
-    @GetMapping("/user/signUp")
+    @GetMapping("/user/userSignUp")
     public String userSignInView(Model model){
         CreateUserDto createUserDto = new CreateUserDto();
         model.addAttribute("dto" , createUserDto);
-        return "user/user_signUp";
+        return "/user/userSignUp";
     }// 회원가입
 
-    @PostMapping("/user/signUp")
-    public String userSignPost(@Valid @ModelAttribute("dto") CreateUserDto createUserDto , BindingResult bindingResult){
+    @PostMapping("/user/userSignUp")
+    public String userSignPost(@Valid @ModelAttribute("dto") CreateUserDto createUserDto ,
+                               BindingResult bindingResult){
+        System.out.println(createUserDto.toString());
 
         if (bindingResult.hasErrors()) {
-            return "/user/signUp";
+            return "/user/userSignUp";
         }
 
         if (!(createUserDto.getPassword1().equals(createUserDto.getPassword2()))) {
             bindingResult.rejectValue("password2", "password incorrect", "비밀번호가 일치하지 않습니다");
-            return "/user/signUp";
+            return "/user/userSignUp";
+        }
+
+        if(userService.userIdExist(createUserDto.getUserId())){
+            bindingResult.rejectValue("userId" , "userId exist" , "사용자 ID가 존재합니다.");
+            return "/user/userSignUp";
         }
         try {
             userLoginRegisterService.createUser(createUserDto);
         } catch (DataIntegrityViolationException e) { //동일한 사용자
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자 입니다.");
-            return "/user/signUp";
+            return "/user/userSignUp";
         } catch (Exception e) {
             bindingResult.reject("signupFailed", e.getMessage());
-            return "/user/signUp";
+            return "/user/userSignUp";
         }
-        return "redirect:/user/login";
+        return "redirect:/registrationSuccess";
     }
+
+    @GetMapping("/registrationSuccess")
+    public String showRegistrationSuccess(){
+        return "/registrationSuccess";
+    } //회원가입 성공페이지
 
     @GetMapping("/user")
     public String userMainPage() {
@@ -82,15 +99,21 @@ public class PcController {
 
     @GetMapping("/user/userMenu")
     public String userMenu(Model model) {
+        UsersDto usersDto = userService.showCurrentUser();
+        int currentMoney = usersDto.getMoney();
         List<MenuDto> menuDtoList = userService.showAllMenuKind("라면");
         model.addAttribute("menuDto", menuDtoList);
+        model.addAttribute("currentMoney" , currentMoney);
         return "/user/user_menu";
     } //[라면]메뉴판으로 이동
 
     @GetMapping("/user/userMenu2")
     public String userMenu2(Model model) {
+        UsersDto usersDto = userService.showCurrentUser();
+        int currentMoney = usersDto.getMoney();
         List<MenuDto> menuDtoList = userService.showAllMenuKind("음료");
         model.addAttribute("menuDto", menuDtoList);
+        model.addAttribute("currentMoney" , currentMoney);
         return "/user/user_menu_drink";
     } //[음료]메뉴판으로 이동
 
@@ -143,42 +166,6 @@ public class PcController {
 
         return "/admin/sales";
     }
-
-//    @GetMapping("/login")
-//    public String login(){
-//        return "/user/login";
-//    } //로그인페이지 (첫화면)
-//
-//    @GetMapping("/user/register")
-//    public String register(Model model){
-//        CreateUserDto createUserDto = new CreateUserDto();
-//        model.addAttribute(createUserDto);
-//        return "/user/register";
-//    } //회원가입페이지
-//
-//    @PostMapping("/user/register")
-//    public String registerPost(@Valid @ModelAttribute("createUserDto") CreateUserDto createUserDto, BindingResult bindingResult) {
-//
-//        if (bindingResult.hasErrors()) {
-//            return "/signup";
-//        }
-//
-//        if (!(createUserDto.getPassword1().equals(createUserDto.getPassword2()))) {
-//            bindingResult.rejectValue("password2", "password incorrect", "비밀번호가 일치하지 않습니다");
-//            return "signUp";
-//        }
-//        try {
-//            userLoginRegisterService.createUser(createUserDto);
-//        } catch (DataIntegrityViolationException e) { //동일한 사용자
-//            e.printStackTrace();
-//            bindingResult.reject("signupFailed", "이미 등록된 사용자 입니다.");
-//            return "signup";
-//        } catch (Exception e) {
-//            bindingResult.reject("signupFailed", e.getMessage());
-//            return "signup";
-//        }
-//        return "redirect:/user/login";
-//    }
     @GetMapping("/admin/menu")
     public String menuAll(Model model) {
         List<MenuDto> menuDtoList = adminService.menuAll();

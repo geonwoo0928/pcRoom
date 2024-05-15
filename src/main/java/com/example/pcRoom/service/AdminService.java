@@ -11,8 +11,10 @@ import com.example.pcRoom.repository.MenuRepository;
 import com.example.pcRoom.repository.SellRepository;
 import com.example.pcRoom.repository.UsersRepository;
 import org.apache.catalina.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +28,9 @@ public class AdminService {
     private final SellRepository sellRepository;
     private final MenuRepository menuRepository;
     private final UsersRepository usersRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public AdminService(SellRepository sellRepository, MenuRepository menuRepository, UsersRepository usersRepository) {
         this.sellRepository = sellRepository;
@@ -159,6 +164,8 @@ public class AdminService {
     }
 
     public void userUpdate(UsersDto usersDto) {
+        String pw = passwordEncoder.encode(usersDto.getPassword()); //암호화된 비밀번호
+        usersDto.setPassword(pw);
         Users users = usersDto.fromUserDto(usersDto);
         usersRepository.save(users);
     }

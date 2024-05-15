@@ -26,15 +26,4 @@ public class CreateUserDto {
     private String phoneNum; //회원 전화번호
 
     private int confirmedNum; //관리자인증번호
-
-//    public static Users dtoToEntity(CreateUserDto createUserDto){
-//        return new Users(
-//                createUserDto.getUserId(),
-//                createUserDto.getName(),
-//                createUserDto.getPassword1(),
-//                createUserDto.getEmail(),
-//                createUserDto.getPhoneNum(),
-//                createUserDto.getStatus()
-//        );
-//    }
 }

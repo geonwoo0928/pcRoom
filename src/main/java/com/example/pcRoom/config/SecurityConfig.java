@@ -21,7 +21,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((request) -> request
                         .requestMatchers("/css/**" , "/js/**" , "/img/**").permitAll() //** 모든것
-                        .requestMatchers("/user/login" , "/user/signUp").permitAll()
+                        .requestMatchers("/user/login" , "/user/userSignUp" , "/registrationSuccess").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()) // 위에 폴더 외의 다른 폴더들은 인증받아야함 (anyRequest.authenticated)
 //                        .requestMatchers("/**").permitAll())
 
