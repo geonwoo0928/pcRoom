@@ -3,6 +3,7 @@ package com.example.pcRoom.dto;
 import com.example.pcRoom.entity.Sell;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -17,8 +18,9 @@ public class SellDto {
 
     private MenuDto menuDto;
     private UsersDto usersDto;
-    private int total;
 
+    private Integer total; // 총 매출
+    private Integer totalMoney; // 사용자 총 금액
 
     public SellDto(Long id, Long userNo, Long menuId, int sellAmount, MenuDto menuDto, UsersDto usersDto) {
         this.id = id;
@@ -33,6 +35,7 @@ public class SellDto {
         this.menuId = menuId;
         this.id = menuId; //시험삼아 지워야함
         } //사용 UserService - putMenuList sell테이블에 메뉴 아이디 등록
+
 
     public static Sell dtoToEntity(SellDto sellDto){
         return new Sell(
@@ -52,16 +55,33 @@ public class SellDto {
                 menuDto,
                 usersDto
         );
-
     }
 
-    public SellDto(int total) {
+    public SellDto(Integer total) {
         this.total = total;
     }
-    public static SellDto fromtotal(int total) {
-        return new SellDto(
-                total
-        );
+    public static SellDto fromTotal(Integer total) {
+        return new SellDto(total);
     }
 
+//    public SellDto(Long id, Long userNo, Long menuId, int sellAmount, MenuDto menuDto, UsersDto usersDto, Integer totalMoney) {
+//        this.id = id;
+//        this.userNo = userNo;
+//        this.menuId = menuId;
+//        this.sellAmount = sellAmount;
+//        this.menuDto = menuDto;
+//        this.usersDto = usersDto;
+//        this.totalMoney = totalMoney;
+//    }
+//    public static SellDto fromTotalMoney(Sell sell, MenuDto menuDto, UsersDto usersDto, Integer totalMoney) {
+//        return new SellDto(
+//                sell.getId(),
+//                sell.getUserNo(),
+//                sell.getMenuId(),
+//                sell.getSellAmount(),
+//                menuDto,
+//                usersDto,
+//                totalMoney
+//        );
+//    }
 }

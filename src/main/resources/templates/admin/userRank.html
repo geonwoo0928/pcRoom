@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin_layout}">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/admin/table.css}">
+    <title>매출현황</title>
+</head>
+<body>
+<div class="content" layout:fragment="content">
+    <table>
+        <thead>
+            <tr>
+                <th style="color: #FF00FF">회원 순위</th>
+                <th>회원 ID</th>
+                <th>회원 이름</th>
+                <th style="color: #FF00FF">총 사용 금액</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="total : ${totalMoney}" th:object="${total}">
+                <td th:text="*{rank}"></td>
+                <td th:text="${total.usersDto != null ? total.usersDto.userId : '탈퇴회원'}"></td>
+                <td th:text="${total.usersDto != null ? total.usersDto.name : '탈퇴회원'}"></td>
+                <td th:text="*{totalMoney}">총 사용금액</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

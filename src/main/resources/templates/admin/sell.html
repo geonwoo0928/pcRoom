@@ -21,10 +21,10 @@
                         <span style="font-size: 15px;">주문번호</span>
                         <div style="font-size: 30px;" th:text="*{id}"></div>
                     </div>
-
                     <div class="card-2">
                         <!-- user name-->
-                        <div class="user" th:text="*{usersDto.name}">
+                        <div class="user">
+                            <span th:text="${sell.usersDto != null ? sell.usersDto.name : '탈퇴회원'}"></span>
                         </div>
                         <!-- menu name , amount -->
                         <div class="menu-amount">
