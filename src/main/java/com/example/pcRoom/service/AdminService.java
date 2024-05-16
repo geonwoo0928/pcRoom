@@ -58,9 +58,11 @@ public class AdminService {
     public List<SellDto> total() {
         List<SellDto> sellDtos =  new ArrayList<>();
 
-        int total = sellRepository.total();
-        sellDtos.add(SellDto.fromtotal(total));
+        Integer total = sellRepository.total();
+
+        sellDtos.add(SellDto.fromTotal(total));
         return sellDtos;
+
     } // 총 매출
 
 
@@ -98,7 +100,7 @@ public class AdminService {
             MenuDto menuDto = MenuDto.fromMenuEntity(menu);
 
             // 싹 추가
-            bestSellers.add(BestSellerDto.fromBestEntity(menuId, sumSellAmount,menuDto));
+            bestSellers.add(BestSellerDto.fromBestEntity(menuId,sumSellAmount,menuDto));
         }
 
         // 판매 순위
@@ -152,9 +154,15 @@ public class AdminService {
                 .orElse(null);
     }
 
-    public void update(MenuDto menuDto) {
-        Menu menu = menuDto.fromMenuDto(menuDto); // dto -> entity
-        menuRepository.save(menu); // 저장
+    public void update(MenuDto menuDto) { // 메뉴 수정
+        Menu menu = menuRepository.findById(menuDto.getMenuId()).orElse(null); // id로 메뉴찾기
+        if (menu != null) {
+            menu.setMenuPrice(menuDto.getMenuPrice()); // 메뉴 가격 수정 , 수정폼에서 입력한 가격을 menu 로
+
+            // 기존 재고에 입력한 재고를 더해서 menu 로
+            menu.setMenuAmount(menu.getMenuAmount() + menuDto.getMenuAmount());
+            menuRepository.save(menu); // 저장
+        }
     }
 
     public UsersDto userUpdateView(Long userNo) {

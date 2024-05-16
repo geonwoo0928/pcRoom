@@ -29,3 +29,7 @@ th, td {
             color: #BA55D3;  /* 텍스트 색상 */
             text-align: center;  /* 텍스트 중앙 정렬 */
 }
+
+h5 {
+    text-align: center;
+}
