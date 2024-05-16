@@ -120,17 +120,25 @@ public class PcController {
 
 //    -----------------------admin------------------
 
+
     @GetMapping("/admin/users")
-    public String testView(Model model,
-                           @PageableDefault(page = 0, size = 10, sort = "userNo",
-                                   direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<Users> paging = userService.pagingList(pageable);
+    public String usersList(@RequestParam(value = "keyword", required = false) String keyword,
+                            @PageableDefault(page = 0, size = 10, sort = "userNo",
+                                    direction = Sort.Direction.ASC) Pageable pageable,
+                            Model model) {
+        Page<Users> paging;
+
+        if (keyword != null && !keyword.isEmpty()) {
+            paging = adminService.search(keyword, pageable);
+        } else {
+            paging = adminService.usersPagingList(pageable);
+        }
 
         int totalPage = paging.getTotalPages();
         List<Integer> barNumbers = pagingService.getPaginationBarNumbers(
                 pageable.getPageNumber(), totalPage);
         model.addAttribute("paginationBarNumbers", barNumbers);
-
+        model.addAttribute("searchList", paging.getContent()); // 페이지에서 컨텐트를 가져와야 함
         model.addAttribute("paging", paging);
 
         return "admin/user_list";
