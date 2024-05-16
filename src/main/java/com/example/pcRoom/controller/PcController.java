@@ -83,6 +83,7 @@ public class PcController {
         model.addAttribute("paginationBarNumbers", barNumbers);
 
         model.addAttribute("paging", paging);
+
         return "admin/user_list";
     }
 
@@ -108,6 +109,7 @@ public class PcController {
 
     @GetMapping("/admin/sales")
     public String sales(Model model) {
+        // 가장 많이 판매한 메뉴
         List<BestSellerDto> bestSellers = adminService.getBestSellers();
         model.addAttribute("best", bestSellers);
 
@@ -190,5 +192,13 @@ public class PcController {
     public String userDelete(@RequestParam("delete") Long userNo) {
         adminService.delete(userNo);
         return "redirect:/admin/users";
+    }
+
+    @GetMapping("admin/userRank")
+    public String userRank(Model model) {
+        List<TotalMoneyDto> totalMoneyDtos = userService.totalMoney();
+        model.addAttribute("totalMoney", totalMoneyDtos);
+
+        return "admin/userRank";
     }
 }
