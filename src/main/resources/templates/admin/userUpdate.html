@@ -23,8 +23,7 @@
                 <input type="text" class="form-control" id="name" name="name" th:field="*{name}" placeholder="수정할 이름을 입력하세요">
             </div>
             <div class="col-12">
-                <label for="password" class="form-label">비밀번호 변경</label>
-                <input type="text" class="form-control" id="password" name="password" th:field="*{password}" placeholder="수정할 비밀번호를 입력하세요">
+                <input type="hidden" name="password" th:value="*{password}">
             </div>
             <div class="col-12">
                 <label for="money" class="form-label">남은금액 변경</label>

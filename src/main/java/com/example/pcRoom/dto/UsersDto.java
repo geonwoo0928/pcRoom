@@ -2,10 +2,6 @@ package com.example.pcRoom.dto;
 
 import com.example.pcRoom.constant.Status;
 import com.example.pcRoom.entity.Users;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
@@ -18,10 +14,8 @@ public class UsersDto {
     private int money;
     private Status status; //관리자 , 일반
 
-    public UsersDto(){
-
+    public UsersDto(Long userNo, String userId, String name, String password, int money, String status){
     }
-
 
     public UsersDto(Long userNo, String userId, String name, String password, int money, Status status) {
         this.userNo = userNo;
@@ -34,6 +28,9 @@ public class UsersDto {
 
     //    Entity를 Dto로 변환
     public static UsersDto fromUserEntity(Users users) {
+        if (users == null) {
+            return new UsersDto(null, "탈퇴한 회원입니다", "탈퇴한 회원입니다", "", 0, "탈퇴");
+        }
         return new UsersDto(
                 users.getUserNo(),
                 users.getUsername(),
