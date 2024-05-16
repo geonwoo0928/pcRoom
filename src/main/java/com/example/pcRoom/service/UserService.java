@@ -84,12 +84,6 @@ public class UserService {
             }
         } // 메뉴이름 추출 , 빈도 계산
     }
-
-<<<<<<< HEAD
-//    public Page<Users> pagingList(Pageable pageable) {
-//        return usersRepository.findAll(pageable);
-//    }
-=======
     public Page<Users> pagingList(Pageable pageable) {
         return usersRepository.findAll(pageable);
     }
@@ -124,6 +118,4 @@ public class UserService {
 
         return totalMoneyDtos;
     }
-
->>>>>>> 9e5b3e14b7bf5318397b71755cbcef1a1d66e455
 }
