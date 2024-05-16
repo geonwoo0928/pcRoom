@@ -89,6 +89,26 @@ public class UserService {
         return usersRepository.findAll(pageable);
     }
 
+    public boolean userIdExist(String userId) {
+        if(usersRepository.findByUsername(userId) == null){
+            return true;
+        }
+        return false;
+    } //사용자 Id 중복확인
+
+    public UsersDto showCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = null;
+        if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
+            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+            currentUserName = principalDetails.getUsername();
+        }
+        Optional<Users> userOptional = usersRepository.findByUsername(currentUserName);
+        Users users = userOptional.get();
+        UsersDto usersDto = UsersDto.fromUserEntity(users);
+
+        return usersDto;
+    }
     public List<TotalMoneyDto> totalMoney() {
         List<Object[]> list = sellRepository.totalMoney();
         List<TotalMoneyDto> totalMoneyDtos = new ArrayList<>();
@@ -119,5 +139,4 @@ public class UserService {
 
         return totalMoneyDtos;
     }
-
 }

@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum Status {
-    ADMIN("관리자"),
-    USER("회원");
+    ADMIN("ROLE_ADMIN"),
+    USER("ROLE_USER");
 
     private String status;
 
