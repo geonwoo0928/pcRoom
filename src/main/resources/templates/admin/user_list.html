@@ -25,11 +25,13 @@
             <td th:text="*{username}">회원 ID</td>
             <td th:text="*{name}">회원 이름</td>
             <td th:text="*{money}">남은 잔액</td>
+            <td>
 <!--            <td>-->
 <!--                <form th:action="@{/admin/userUpdate}" method="get">-->
 <!--                    <input type="hidden" name="updateUserNo" th:value="*{userNo}">-->
 <!--                    <input type="submit" value="수정">-->
 <!--                </form>-->
+            </td>
 <!--            </td>-->
             <td>
                 <form th:action="@{/admin/userDelete}" method="post">
