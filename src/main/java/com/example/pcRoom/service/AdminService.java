@@ -137,16 +137,21 @@ public class AdminService {
         // 오름차순 정렬: Comparator.comparingInt() -> 기본적으로 오름차순으로 정렬 됨
     }
 
-    public List<MenuDto> menuAll() { // 메뉴 목록 보이기
+    public List<MenuDto> menuAll(Page<Menu> paging) {
         List<Menu> menuList = menuRepository.findAll();
         List<MenuDto> menuDtoList = new ArrayList<>();
 
-        for(Menu menu : menuList){
+        for(Menu menu : paging.getContent()){
             menuDtoList.add(MenuDto.fromMenuEntity(menu));
         }
         Collections.sort(menuDtoList, Comparator.comparingLong(MenuDto::getMenuId));
         return menuDtoList;
     }
+
+    public Page<Menu> menuPagingList(Pageable pageable) {
+        return menuRepository.findAll(pageable);
+    }
+
 
     public MenuDto updateView(Long menuId) {
         return menuRepository.findById(menuId) // ID로 메뉴 찾기
@@ -189,5 +194,26 @@ public class AdminService {
     public Page<Users> usersPagingList(Pageable pageable) {
         return usersRepository.findAll(pageable);
     } // 사용자 정보 페이징 출력
+
+
+    public List<MenuDto> menuSearch(String type, String keyword) { // 메뉴 검색
+        List<MenuDto> menuDtoList = new ArrayList<>();
+
+        switch (type) {
+            case "menuKind" :
+                menuDtoList = menuRepository.searchMenuKind(keyword)
+                        .stream()
+                        .map(x -> MenuDto.fromMenuEntity(x))
+                        .toList();
+                break;
+            case "menuName" :
+                menuDtoList = menuRepository.searchMenuName(keyword)
+                        .stream()
+                        .map(x -> MenuDto.fromMenuEntity(x))
+                        .toList();
+                break;
+        }
+        return menuDtoList;
+    }
 }
 

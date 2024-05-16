@@ -16,9 +16,7 @@
             <th>회원 ID</th>
             <th>회원 이름</th>
             <th>남은 잔액</th>
-            <th>총 사용 금액</th>
-            <th>남은 잔액</th>
-            <th colspan="2"></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -28,11 +26,13 @@
             <td th:text="*{name}">회원 이름</td>
             <td th:text="*{money}">남은 잔액</td>
             <td>
+<!--            <td>-->
 <!--                <form th:action="@{/admin/userUpdate}" method="get">-->
 <!--                    <input type="hidden" name="updateUserNo" th:value="*{userNo}">-->
 <!--                    <input type="submit" value="수정">-->
 <!--                </form>-->
             </td>
+<!--            </td>-->
             <td>
                 <form th:action="@{/admin/userDelete}" method="post">
                     <input type="hidden" name="delete" th:value="*{userNo}">
@@ -42,7 +42,6 @@
         </tr>
         </tbody>
     </table>
-
     <form th:action="@{/admin/users}" method="GET">
         <div class="input-group mb-4">
             <input type="text" name="keyword" placeholder="회원 ID 검색" class="form-control">
@@ -51,7 +50,6 @@
             </div>
         </div>
     </form>
-
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item" th:classappend="${paging.number} <= 0? 'disabled'">

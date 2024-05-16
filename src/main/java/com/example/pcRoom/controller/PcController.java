@@ -2,6 +2,7 @@ package com.example.pcRoom.controller;
 
 import com.example.pcRoom.config.PrincipalDetails;
 import com.example.pcRoom.dto.*;
+import com.example.pcRoom.entity.Menu;
 import com.example.pcRoom.entity.Sell;
 import com.example.pcRoom.entity.Users;
 import com.example.pcRoom.service.AdminService;
@@ -219,12 +220,38 @@ public class PcController {
 
         return "/admin/sales";
     }
+
     @GetMapping("/admin/menu")
-    public String menuAll(Model model) {
-        List<MenuDto> menuDtoList = adminService.menuAll();
+    public String menuAll(Model model,
+                          @RequestParam(value = "type", required = false) String type,
+                          @RequestParam(value = "keyword", required = false) String keyword,
+                          @PageableDefault(page = 0, size = 10, sort = "menuId", direction = Sort.Direction.ASC) Pageable pageable) {
+
+        Page<Menu> paging = Page.empty(); // 비어있는 페이지
+        List<MenuDto> menuDtoList;
+
+        // 검색어가 있는 경우
+        if (type != null && keyword != null && !keyword.isEmpty()) {
+            menuDtoList = adminService.menuSearch(type, keyword);
+        } else {
+            // 검색어가 없는 경우
+            paging = adminService.menuPagingList(pageable);
+            menuDtoList = adminService.menuAll(paging);
+        }
+
+        // 모델에 데이터 추가
         model.addAttribute("menuList", menuDtoList);
+        model.addAttribute("paging", paging);
+
+        // 페이지네이션 바 정보 추가
+        List<Integer> barNumbers = pagingService.pageNumbers(
+                pageable.getPageNumber(),
+                paging.getTotalPages());
+        model.addAttribute("barNumbers", barNumbers);
+
         return "/admin/menu";
     }
+
 
     @GetMapping("/admin/menuUpdate")
     public String updateView(@RequestParam("updateMenuId") Long menuId, Model model) {
@@ -258,11 +285,21 @@ public class PcController {
         return "redirect:/admin/users";
     }
 
-    @GetMapping("admin/userRank")
+    @GetMapping("/admin/userRank")
     public String userRank(Model model) {
         List<TotalMoneyDto> totalMoneyDtos = userService.totalMoney();
         model.addAttribute("totalMoney", totalMoneyDtos);
 
         return "admin/userRank";
     }
+
+//    @GetMapping("/admin/search")
+//    public String menuSearch(@RequestParam("type") String type,
+//                             @RequestParam("keyword") String keyword,
+//                             Model model) {
+//        List<MenuDto> menuDtoList = adminService.menuSearch(type,keyword);
+//        model.addAttribute("menuSearch", menuDtoList);
+//
+//        return "/admin/menu";
+//    }
 }
