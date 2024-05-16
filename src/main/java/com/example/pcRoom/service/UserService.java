@@ -84,7 +84,7 @@ public class UserService {
         } //메뉴이름 추출 , 빈도 계산
     }
 
-    public Page<Users> pagingList(Pageable pageable) {
-        return usersRepository.findAll(pageable);
-    }
+//    public Page<Users> pagingList(Pageable pageable) {
+//        return usersRepository.findAll(pageable);
+//    }
 }

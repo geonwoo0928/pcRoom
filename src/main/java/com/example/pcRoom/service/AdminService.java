@@ -166,5 +166,13 @@ public class AdminService {
     public void delete(Long userNo) {
         usersRepository.deleteById(userNo);
     }
+
+    public Page<Users> search(String keyword, Pageable pageable) {
+        return usersRepository.findByUsernameContaining(keyword, pageable);
+    }
+
+    public Page<Users> usersPagingList(Pageable pageable) {
+        return usersRepository.findAll(pageable);
+    } // 사용자 정보 페이징 출력
 }
 
