@@ -19,7 +19,7 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userNo;
 
-    @Column(nullable = false, name = "user_id", length = 20)
+    @Column(nullable = false, name = "user_id", length = 20 , unique = true)
     private String username; //회원아이디
 
     @Column(nullable = false, length = 10)

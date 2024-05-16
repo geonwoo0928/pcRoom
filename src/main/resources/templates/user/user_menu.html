@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class="menu-label">
-                    Quokka
+                    <span th:text="${#numbers.formatInteger(currentMoney, 3, 'COMMA') + '원'}"></span>
                 </div>
                 <input type="button" value="주문하기" onclick="submitOrder()" class="purchase-button">
             </div><!--주문내역-->
