@@ -99,6 +99,7 @@ function submitOrder() {
             if (xhr.status === 200) {
                 console.log('주문이 성공적으로 저장되었습니다.');
                 alert('구매가 완료되었습니다.'); // 성공 메시지 표시
+                location.reload();
             } else {
                 console.error('주문 처리 중 오류가 발생했습니다.');
                 alert(JSON.parse(xhr.responseText).error); // 서버에서 보낸 오류 메시지 표시

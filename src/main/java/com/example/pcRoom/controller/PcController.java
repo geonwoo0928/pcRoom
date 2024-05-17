@@ -24,6 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -284,4 +285,16 @@ public class PcController {
         adminService.delete(userNo);
         return "redirect:/admin/users";
     }
+    @GetMapping("/user/userInsertCoin")
+    public String userInsertCoin(Model model) {
+        int currentMoney = userService.getCurrentMoney();
+        model.addAttribute("currentMoney" , currentMoney);
+        return "user/user_charge";
+    }
+
+    @PostMapping("/user/userInsertCoin")
+    public String chargedCoin(@RequestParam("amount") int amount){
+        userService.chargedCoin(amount);
+        return "redirect:/user/userInsertCoin";
+    } //금액충전
 }
