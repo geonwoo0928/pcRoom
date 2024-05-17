@@ -31,6 +31,19 @@ public class UsersDto {
         this.status = status;
     }
 
+    public Users toUserEntity() {
+        return new Users(
+                this.userNo,
+                this.userId,
+                this.name,
+                this.password,
+                this.money,
+                this.status
+        );
+    }
+
+
+
     //    Entity를 Dto로 변환
     public static UsersDto fromUserEntity(Users users) {
         if (users == null) {

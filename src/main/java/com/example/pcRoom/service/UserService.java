@@ -1,7 +1,9 @@
 package com.example.pcRoom.service;
 
 import com.example.pcRoom.config.PrincipalDetails;
+import com.example.pcRoom.constant.Status;
 import com.example.pcRoom.dto.MenuDto;
+import com.example.pcRoom.dto.UpdateUserDto;
 import com.example.pcRoom.dto.UsersDto;
 import com.example.pcRoom.entity.Menu;
 import com.example.pcRoom.entity.Sell;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,6 +32,8 @@ public class UserService {
     SellRepository sellRepository;
     @Autowired
     AdminService adminService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public List<MenuDto> showAllMenuKind(String kind) {
         List<Menu> menuList = menuRepository.findBymenuKind(kind);
@@ -108,6 +113,21 @@ public class UserService {
         return usersDto;
     }
 
+    public UsersDto showOneUser(Long id) {
+        Users users = usersRepository.findById(id).orElse(null);
+        if (users == null) {
+            return null;
+        } else {
+            return UsersDto.fromUserEntity(users);
+        }
+    }
+
+    public void updateUser(UpdateUserDto updateUserDto) {
+        Users users = updateUserDto.toUserEntity(); // UpdateUserDto 객체를 Users 엔티티로 변환
+        users.setStatus(Status.USER);
+        // 기존 사용자 정보를 가져와서 엔티티에 설정하는 등의 추가 작업이 필요할 수 있음
+        usersRepository.save(users); // 변환된 Users 엔티티를 저장
+    }
     public int getCurrentMoney(){
         //PrincipalDetails 에서 유저아이디 가져오는 코드
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -118,6 +138,7 @@ public class UserService {
         }
         //PrincipalDetails 에서 유저아이디 가져오는 코드
         return currentMoney;
+
     }
 
     public void chargedCoin(int amount) {

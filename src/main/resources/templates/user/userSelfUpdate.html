@@ -6,52 +6,47 @@
     <title>내 정보 수정</title>
 </head>
 <body>
-<form th:action="@{/user/userSelfUpdate}" method="post" th:object="${currentUserDto}">
+<form th:action="@{/user/userSelfUpdate}" method="post" th:object="${updateUserDto}">
     <div class="header">내 정보 수정</div>
     <table>
+        <input type="hidden" name="userNo" th:value="${updateUserDto.userNo}">
         <tr>
             <td>아이디</td>
-            <td><input id="username" name="userId" type="text" th:value="${currentUserDto.userId}"></td>
+            <td><input id="username" name="userId" type="text" th:value="${updateUserDto.userId}"></td>
             <td><input type="button" value="중복확인" class="idCheckBtn"></td>
         </tr>
         <tr>
-            <td class="errorCode" th:errors="${currentUserDto.userId}"></td>
-        </tr>
-        <tr>
             <td>이름</td>
-            <td colspan="2"><input name="name" type="text" th:value="${currentUserDto.name}" disabled></td>
+            <td colspan="2"><input name="name" type="text" th:value="${updateUserDto.name}" disabled></td>
         </tr>
         <tr>
-            <td>비밀번호</td>
-            <td colspan="2"><input id="password1" name="password1" type="password" th:field="${currentUserDto.password1}"></td>
+            <td>새로운 비밀번호</td>
+            <td colspan="2"><input id="password1" name="password1" type="password" th:value="${updateUserDto.password1}"></td>
         </tr>
         <tr>
-            <td class="errorCode" th:errors="${currentUserDto.password1}"></td>
+            <td class="errorCode" th:errors="${updateUserDto.password1}"></td>
         </tr>
         <tr>
-            <td>비밀번호 확인</td>
-            <td colspan="2"><input id="password2" name="password2" type="password" th:field="${currentUserDto.password2}"></td>
+            <td>새로운 비밀번호 확인</td>
+            <td colspan="2"><input id="password2" name="password2" type="password" th:value="${updateUserDto.password2}"></td>
         </tr>
         <tr>
-            <td class="errorCode" th:errors="${currentUserDto.password2}"></td>
+            <td class="errorCode" th:errors="${updateUserDto.password2}"></td>
         </tr>
         <tr>
             <td>이메일</td>
-            <td colspan="2"><input id="email" name="email" type="email" th:field="${currentUserDto.email}"></td>
+            <td colspan="2"><input id="email" name="email" type="email" th:value="${updateUserDto.email}"></td>
         </tr>
         <tr>
-            <td class="errorCode" th:errors="${currentUserDto.email}"></td>
+            <td class="errorCode" th:errors="${updateUserDto.email}"></td>
         </tr>
         <tr>
             <td>전화번호</td>
-            <td colspan="2"><input type="text" th:field="${currentUserDto.phoneNum}"></td>
+            <td colspan="2"><input id="phoneNum" name="phoneNum" type="text" th:value="${updateUserDto.phoneNum}"></td>
         </tr>
     </table>
     <div class="bottomBtns">
-        <form th:action="@{/admin/userSelfUpdate}" method="get">
-            <input type="hidden" name="updateMenuId" th:value="${menu.menuId}">
-            <input type="submit" value="수정완료" class="submitBtn">
-        </form>
+        <input type="submit" value="수정완료" class="submitBtn">
         <button type="reset" class="resetBtn">다시입력</button>
     </div>
 </form>
