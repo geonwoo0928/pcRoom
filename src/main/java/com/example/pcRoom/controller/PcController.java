@@ -24,6 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -293,13 +294,16 @@ public class PcController {
         return "admin/userRank";
     }
 
-//    @GetMapping("/admin/search")
-//    public String menuSearch(@RequestParam("type") String type,
-//                             @RequestParam("keyword") String keyword,
-//                             Model model) {
-//        List<MenuDto> menuDtoList = adminService.menuSearch(type,keyword);
-//        model.addAttribute("menuSearch", menuDtoList);
-//
-//        return "/admin/menu";
-//    }
+    @GetMapping("/user/userInsertCoin")
+    public String userInsertCoin(Model model) {
+        int currentMoney = userService.getCurrentMoney();
+        model.addAttribute("currentMoney" , currentMoney);
+        return "user/user_charge";
+    }
+
+    @PostMapping("/user/userInsertCoin")
+    public String chargedCoin(@RequestParam("amount") int amount){
+        userService.chargedCoin(amount);
+        return "redirect:/user/userInsertCoin";
+    } //금액충전
 }
