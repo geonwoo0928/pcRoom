@@ -128,5 +128,52 @@ public class UserService {
         // 기존 사용자 정보를 가져와서 엔티티에 설정하는 등의 추가 작업이 필요할 수 있음
         usersRepository.save(users); // 변환된 Users 엔티티를 저장
     }
+    public int getCurrentMoney(){
+        //PrincipalDetails 에서 유저아이디 가져오는 코드
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int currentMoney = 0;
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof PrincipalDetails) {
+            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+            currentMoney = principalDetails.getUser().getMoney();
+        }
+        //PrincipalDetails 에서 유저아이디 가져오는 코드
+        return currentMoney;
 
+    }
+
+    public void chargedCoin(int amount) {
+        //PrincipalDetails 에서 유저아이디 가져오는 코드
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int currentMoney = 0;
+        Users users = new Users();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof PrincipalDetails) {
+            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+            currentMoney = principalDetails.getUser().getMoney();
+            users = principalDetails.getUser();
+        }
+        //PrincipalDetails 에서 유저아이디 가져오는 코드
+
+        switch (amount) {
+            case 1000:
+                currentMoney += 1000;
+                break;
+            case 2000:
+                currentMoney += 2000;
+                break;
+            case 3000:
+                currentMoney += 3000;
+                break;
+            case 5000:
+                currentMoney += 5000;
+                break;
+            case 10000:
+                currentMoney += 10000;
+                break;
+            case 20000:
+                currentMoney += 20000;
+                break;
+        }
+        users.setMoney(currentMoney);
+        usersRepository.save(users);
+    }
 }

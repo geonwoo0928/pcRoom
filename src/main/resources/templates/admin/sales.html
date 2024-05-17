@@ -22,7 +22,7 @@
         </tr>
         <!--총 매출-->
         <tr th:each="total : ${total}" th:object="${total}">
-            <td class="total-row" colspan="3" th:text="'💸 총 매출 ➡️' + ' ' + *{total} + '원 입니다 💜'"></td>
+            <td class="total-row" colspan="3" th:text="'💸 총 매출 ➡️' + ' ' + *{total != null && total != null ? total : '0'} + '원 입니다 💜'"></td>
         </tr>
     </table>
 </div>

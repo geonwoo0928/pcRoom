@@ -53,10 +53,25 @@
     background-color: #FFCA1A;
     color: #020715;
 }
+.adminNavbar li .user-button:hover {
+    background-color: #437779;
+    color: #FFFFFF;
+}
+
+.adminNavbar li .logout-button:hover {
+    background-color: #8B0000;
+    color: #FFFFFF;
+}
 
 .adminNavbar li:last-child {
   position: absolute;
   bottom: 0;
   margin-bottom: 30px;
   width: 80%;
+}
+
+.adminNavbar li:nth-last-child(2) {
+    position: absolute;
+    bottom: 70px; /* 로그아웃 버튼 위에 70px 떨어지도록 조정 */
+    width: 80%;
 }
