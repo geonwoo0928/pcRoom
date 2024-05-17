@@ -102,36 +102,37 @@ public class PcController {
 
 
     @GetMapping("/user/userSelfUpdate")
-    public String showUpdateForm(HttpSession session, Model model) {
-        // 세션에서 현재 사용자 정보를 가져오기
-        Users currentUser = (Users) session.getAttribute("user");
-        if (currentUser == null) {
-            // 로그인되지 않은 사용자는 로그인 페이지로 리다이렉트
-            return "redirect:/user/user_login";
-        }
-        // 수정 폼에 사용할 사용자 정보를 모델에 추가합니다.
-        model.addAttribute("user", currentUser);
+    public String showUpdateForm(@RequestParam("updateUserId") Long userNo, Model model) {
+
+        // userNo를 사용하여 해당 사용자의 정보를 가져온다
+        UsersDto currentUserDto = userService.showCurrentUser(); // 현재 사용자 정보를 가져옴
+        UpdateUserDto updateUserDto = new UpdateUserDto(); // 수정할 사용자 정보 DTO 생성
+
+        // 현재 사용자의 정보를 updateUserDto에 복사
+        updateUserDto.setUserId(currentUserDto.getUserId());
+        updateUserDto.setName(currentUserDto.getName());
+        model.addAttribute("updateUserDto", updateUserDto); // 모델에 추가
         return "/user/userSelfUpdate";
     }
 
-    @PostMapping("/user/userSelfUpdate")
-    public String userSelfUpdate(HttpSession session, @ModelAttribute("user") Users updatedUser){
-
-        // 세션에서 현재 사용자 정보를 가져옵니다.
-        Users currentUser = (Users) session.getAttribute("user");
-        if (currentUser == null) {
-            // 로그인되지 않은 사용자는 로그인 페이지로 리다이렉트합니다.
-            return "redirect:/login";
+    @PostMapping("/user/userSelfUpdate/{userNo}")
+    public String userSelfUpdate(@ModelAttribute("updateUserDto") @Valid UpdateUserDto updateUserDto,
+                                 BindingResult bindingResult) {
+        // 유효성 검사 결과 확인
+        if (bindingResult.hasErrors()) {
+            // 에러가 있을 경우 수정 폼으로 다시 이동
+            return "/user/userSelfUpdate";
         }
-        // 수정된 정보로 사용자 정보를 업데이트합니다.
-        currentUser.setName(updatedUser.getName());
-        currentUser.setEmail(updatedUser.getEmail());
-        // 나머지 필드도 업데이트하는 작업을 수행합니다.
 
-        // 업데이트된 사용자 정보를 세션에 다시 저장합니다.
-        session.setAttribute("user", currentUser);
-        // 사용자 정보가 성공적으로 업데이트되었음을 나타내는 페이지로 리다이렉트합니다.
-        return "redirect:/registrationSuccess";
+        if (!(updateUserDto.getPassword1().equals(updateUserDto.getPassword2()))) {
+            bindingResult.rejectValue("password2", "password incorrect", "비밀번호가 일치하지 않습니다");
+            return "/user/userSelfUpdate";
+        }
+
+        // 수정된 사용자 정보 업데이트
+        userService.updateUser(updateUserDto);
+
+        return "redirect:/user";
     }
 
 
@@ -285,21 +286,6 @@ public class PcController {
         return "redirect:/admin/users";
     }
 
-    @GetMapping("/admin/userRank")
-    public String userRank(Model model) {
-        List<TotalMoneyDto> totalMoneyDtos = userService.totalMoney();
-        model.addAttribute("totalMoney", totalMoneyDtos);
 
-        return "admin/userRank";
-    }
 
-//    @GetMapping("/admin/search")
-//    public String menuSearch(@RequestParam("type") String type,
-//                             @RequestParam("keyword") String keyword,
-//                             Model model) {
-//        List<MenuDto> menuDtoList = adminService.menuSearch(type,keyword);
-//        model.addAttribute("menuSearch", menuDtoList);
-//
-//        return "/admin/menu";
-//    }
 }

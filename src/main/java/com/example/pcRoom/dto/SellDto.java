@@ -20,7 +20,6 @@ public class SellDto {
     private UsersDto usersDto;
 
     private Integer total; // 총 매출
-    private Integer totalMoney; // 사용자 총 금액
 
     public SellDto(Long id, Long userNo, Long menuId, int sellAmount, MenuDto menuDto, UsersDto usersDto) {
         this.id = id;

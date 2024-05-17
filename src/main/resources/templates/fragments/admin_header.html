@@ -4,10 +4,9 @@
 <div th:fragment="admin_header" class="adminNavbar">
     <ul>
         <li><b>쿼카네 PC방 🐻</b></li>
-        <li><a href="#"> 홈</a></li>
         <li>
-            <form th:action="@{/admin/users}" method="get">
-                <button type="submit">회원 목록</button>
+            <form th:action="@{/admin/sell}" method="get">
+                <button type="submit">주문 목록</button>
             </form>
         </li>
         <li>
@@ -16,18 +15,13 @@
             </form>
         </li>
         <li>
-            <form th:action="@{/admin/sell}" method="get">
-                <button type="submit">주문 목록</button>
+            <form th:action="@{/admin/users}" method="get">
+                <button type="submit">회원 목록</button>
             </form>
         </li>
         <li>
             <form th:action="@{/admin/sales}" method="get">
                 <button type="submit">매출 현황</button>
-            </form>
-        </li>
-        <li>
-            <form th:action="@{/admin/userRank}" method="get">
-                <button type="submit">회원 순위</button>
             </form>
         </li>
         <li>
