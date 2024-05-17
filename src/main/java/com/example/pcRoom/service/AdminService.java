@@ -1,5 +1,6 @@
 package com.example.pcRoom.service;
 
+import com.example.pcRoom.config.PrincipalDetails;
 import com.example.pcRoom.dto.BestSellerDto;
 import com.example.pcRoom.dto.MenuDto;
 import com.example.pcRoom.dto.SellDto;
@@ -14,13 +15,12 @@ import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.function.ToIntFunction;
 
 @Service
@@ -187,13 +187,46 @@ public class AdminService {
         usersRepository.deleteById(userNo);
     }
 
-    public Page<Users> search(String keyword, Pageable pageable) {
-        return usersRepository.findByUsernameContaining(keyword, pageable);
+    public void deleteUser(){
+        //PrincipalDetails 에서 유저아이디 가져오는 코드
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = null;
+        if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
+            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+            currentUserName = principalDetails.getUsername();
+        }
+        Optional<Users> userOptional = usersRepository.findByUsername(currentUserName);
+        Users users = userOptional.get();
+        usersRepository.deleteById(users.getUserNo());
+
+        //PrincipalDetails 에서 유저아이디 가져오는 코드
     }
 
-    public Page<Users> usersPagingList(Pageable pageable) {
-        return usersRepository.findAll(pageable);
+    public Page<UsersDto> search(String keyword, Pageable pageable) {
+        Page<Users> page = usersRepository.findByUsernameContaining(keyword, pageable);
+        return page.map(this::convertToDto);
+    }
+
+    public Page<UsersDto> usersPagingList(Pageable pageable) {
+        Page<Users> page = usersRepository.findAll(pageable);
+        return page.map(this::convertToDto);
     } // 사용자 정보 페이징 출력
+
+    private UsersDto convertToDto(Users user) {
+        Integer totalMoney = sellRepository.getTotalMoney(user.getUserNo());
+        if (totalMoney == null) {
+            totalMoney = 0; // 판매 기록이 없는 경우 총 금액을 0으로 설정
+        }
+        return new UsersDto(
+                user.getUserNo(),
+                user.getUsername(),
+                user.getName(),
+                user.getPassword(),
+                user.getMoney(),
+                user.getStatus(),
+                totalMoney
+        );
+    }
 
 
     public List<MenuDto> menuSearch(String type, String keyword) { // 메뉴 검색

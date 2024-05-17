@@ -62,5 +62,4 @@ public class SellDto {
     public static SellDto fromTotal(Integer total) {
         return new SellDto(total);
     }
-
 }

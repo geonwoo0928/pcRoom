@@ -16,21 +16,26 @@
             <th>회원 ID</th>
             <th>회원 이름</th>
             <th>남은 잔액</th>
+            <th>총 사용 금액</th>
             <th></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="user : ${paging}" th:object="${user}">
             <td th:text="*{userNo}">회원 번호</td>
-            <td th:text="*{username}">회원 ID</td>
+            <td th:text="*{userId}">회원 ID</td>
             <td th:text="*{name}">회원 이름</td>
             <td th:text="*{money}">남은 잔액</td>
+<<<<<<< HEAD
 <!--            <td>-->
 <!--                <form th:action="@{/admin/userUpdate}" method="get">-->
 <!--                    <input type="hidden" name="updateUserNo" th:value="*{userNo}">-->
 <!--                    <input type="submit" value="수정">-->
 <!--                </form>-->
 <!--            </td>-->
+=======
+            <td th:text="*{totalMoney}">총 사용 금액</td>
+>>>>>>> 1472355cff6de12d97b6f77cd2408ecf5004781d
             <td>
                 <form th:action="@{/admin/userDelete}" method="post">
                     <input type="hidden" name="delete" th:value="*{userNo}">
