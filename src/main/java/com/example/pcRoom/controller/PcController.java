@@ -136,8 +136,8 @@ public class PcController {
 
 
     @PostMapping("/user/userDelete")
-    public String deleteUser(@RequestParam("deleteUserId") Long userNo) {
-        adminService.delete(userNo); // adminService에서 사용자 삭제 로직을 처리
+    public String deleteUser() {
+        adminService.deleteUser(); // adminService에서 사용자 삭제 로직을 처리
         return "/user/user_login"; // 사용자 삭제 후 로그인 페이지로
     } // 로그인 한 해당 회원 계정 탈퇴
 
@@ -170,20 +170,20 @@ public class PcController {
                             @PageableDefault(page = 0, size = 10, sort = "userNo",
                                     direction = Sort.Direction.ASC) Pageable pageable,
                             Model model) {
-        Page<Users> paging;
+        Page<UsersDto> dtoPaging;
 
         if (keyword != null && !keyword.isEmpty()) {
-            paging = adminService.search(keyword, pageable);
+            dtoPaging = adminService.search(keyword, pageable);
         } else {
-            paging = adminService.usersPagingList(pageable);
+            dtoPaging = adminService.usersPagingList(pageable);
         }
 
-        int totalPage = paging.getTotalPages();
+        int totalPage = dtoPaging.getTotalPages();
         List<Integer> barNumbers = pagingService.getPaginationBarNumbers(
                 pageable.getPageNumber(), totalPage);
         model.addAttribute("paginationBarNumbers", barNumbers);
-        model.addAttribute("searchList", paging.getContent()); // 페이지에서 컨텐트를 가져와야 함
-        model.addAttribute("paging", paging);
+        model.addAttribute("searchList", dtoPaging.getContent()); // 페이지에서 컨텐트를 가져와야 함
+        model.addAttribute("paging", dtoPaging);
 
         return "admin/user_list";
     }
@@ -284,22 +284,4 @@ public class PcController {
         adminService.delete(userNo);
         return "redirect:/admin/users";
     }
-
-    @GetMapping("/admin/userRank")
-    public String userRank(Model model) {
-        List<TotalMoneyDto> totalMoneyDtos = userService.totalMoney();
-        model.addAttribute("totalMoney", totalMoneyDtos);
-
-        return "admin/userRank";
-    }
-
-//    @GetMapping("/admin/search")
-//    public String menuSearch(@RequestParam("type") String type,
-//                             @RequestParam("keyword") String keyword,
-//                             Model model) {
-//        List<MenuDto> menuDtoList = adminService.menuSearch(type,keyword);
-//        model.addAttribute("menuSearch", menuDtoList);
-//
-//        return "/admin/menu";
-//    }
 }
