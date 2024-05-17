@@ -135,7 +135,7 @@ public class AdminService {
         // 정렬 대상: bestSellers List
         // 정렬 기준: BestSellerDto 의 getRank() int(rank 타입이 int) 값
         // 오름차순 정렬: Comparator.comparingInt() -> 기본적으로 오름차순으로 정렬 됨
-    }
+    } //제일 많이 나간 메뉴 가져오는 메소드
 
     public List<MenuDto> menuAll(Page<Menu> paging) {
         List<Menu> menuList = menuRepository.findAll();
@@ -146,18 +146,18 @@ public class AdminService {
         }
         Collections.sort(menuDtoList, Comparator.comparingLong(MenuDto::getMenuId));
         return menuDtoList;
-    }
+    } // 메뉴 전체를 보여주는 메소드
 
     public Page<Menu> menuPagingList(Pageable pageable) {
         return menuRepository.findAll(pageable);
-    }
+    } // 메뉴 전체를 페이징 해주는 메소드
 
 
     public MenuDto updateView(Long menuId) {
         return menuRepository.findById(menuId) // ID로 메뉴 찾기
                 .map(x -> MenuDto.fromMenuEntity(x)) // Entity -> dto
                 .orElse(null);
-    }
+    } //menu_id를 이용해서 메뉴정보를 찾는 메소드
 
     public void update(MenuDto menuDto) { // 메뉴 수정
         Menu menu = menuRepository.findById(menuDto.getMenuId()).orElse(null); // id로 메뉴찾기
@@ -168,44 +168,31 @@ public class AdminService {
             menu.setMenuAmount(menu.getMenuAmount() + menuDto.getMenuAmount());
             menuRepository.save(menu); // 저장
         }
-    }
+    } //메뉴 수정 하는 메소드
 
     public UsersDto userUpdateView(Long userNo) {
         return usersRepository.findById(userNo)
                 .map(x -> UsersDto.fromUserEntity(x))
                 .orElse(null);
-    }
+    } // 유저 번호를 이용해서 수정할 유저 정보 가져오는 메소드
 
     public void userUpdate(UsersDto usersDto) {
         String pw = passwordEncoder.encode(usersDto.getPassword()); //암호화된 비밀번호
         usersDto.setPassword(pw);
         Users users = usersDto.fromUserDto(usersDto);
         usersRepository.save(users);
-    }
+    } //유저 정보를 수정하고 저장하는 메소드
 
     public void delete(Long userNo) {
         usersRepository.deleteById(userNo);
-    }
+    } //유저번호를 이용해서 삭제하는 메소드
 
-    public void deleteUser(){
-        //PrincipalDetails 에서 유저아이디 가져오는 코드
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUserName = null;
-        if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
-            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-            currentUserName = principalDetails.getUsername();
-        }
-        Optional<Users> userOptional = usersRepository.findByUsername(currentUserName);
-        Users users = userOptional.get();
-        usersRepository.deleteById(users.getUserNo());
 
-        //PrincipalDetails 에서 유저아이디 가져오는 코드
-    }
 
     public Page<UsersDto> search(String keyword, Pageable pageable) {
         Page<Users> page = usersRepository.findByUsernameContaining(keyword, pageable);
         return page.map(this::convertToDto);
-    }
+    } // 키워드 이용해서 찾은 사용자 정보 페이징 출력
 
     public Page<UsersDto> usersPagingList(Pageable pageable) {
         Page<Users> page = usersRepository.findAll(pageable);
@@ -226,7 +213,7 @@ public class AdminService {
                 user.getStatus(),
                 totalMoney
         );
-    }
+    }  //search(),usersPagingList()메소드에서 반환된 Users를 Dto 타입으로 변환
 
 
     public List<MenuDto> menuSearch(String type, String keyword) { // 메뉴 검색
@@ -247,6 +234,6 @@ public class AdminService {
                 break;
         }
         return menuDtoList;
-    }
+    } //메뉴 검색하는 메소드
 }
 

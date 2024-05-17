@@ -14,7 +14,6 @@
         남은 요금 : <br>
 
         <form th:action="@{/user/userSelfUpdate}" method="get">
-            <input type="hidden" name="updateUserId" th:value="${currentUser.userNo}">
             <input type="submit" value="내정보수정">
         </form>
 
@@ -25,7 +24,6 @@
         </form>
 
         <form th:action="@{/user/userDelete}" method="post">
-            <input type="hidden" name="deleteUserId" th:value="${currentUser.userNo}">  <!-- 갭매필 /user 에서 가져옴  -->
             <input type="submit" value="회원탈퇴">
         </form>
     </div>

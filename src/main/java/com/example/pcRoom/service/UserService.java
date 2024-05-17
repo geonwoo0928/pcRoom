@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class UserService {
     @Autowired
     AdminService adminService;
     @Autowired
-    PasswordEncoder passwordEncoder;
+    BCryptPasswordEncoder passwordEncoder;
 
     public List<MenuDto> showAllMenuKind(String kind) {
         List<Menu> menuList = menuRepository.findBymenuKind(kind);
@@ -45,14 +46,6 @@ public class UserService {
         }
         return menuDtoList;
     } // 메뉴 전체를 가져오는 메소드
-
-    public List<UsersDto> usersList(){
-        List<UsersDto> usersDto = new ArrayList<>();
-        return usersRepository.findAll()
-                .stream()
-                .map(x -> UsersDto.fromUserEntity(x))
-                .toList();
-    } // 모든 회원 정보 출력
 
     public void putMenuList(List<MenuDto> selectedMenus) throws Exception {
 
@@ -87,10 +80,7 @@ public class UserService {
                 sellRepository.save(sell);
             }
         } // 메뉴이름 추출 , 빈도 계산
-    }
-    public Page<Users> pagingList(Pageable pageable) {
-        return usersRepository.findAll(pageable);
-    }
+    } //메뉴 주문
 
     public boolean userIdExist(String userId) {
         if(usersRepository.findByUsername(userId) == null){
@@ -98,6 +88,21 @@ public class UserService {
         }
         return false;
     } //사용자 Id 중복확인
+
+    public void deleteUser(){
+        //PrincipalDetails 에서 유저아이디 가져오는 코드(여기서부터)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = null;
+        if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
+            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+            currentUserName = principalDetails.getUsername();
+        }
+        Optional<Users> userOptional = usersRepository.findByUsername(currentUserName);
+        Users users = userOptional.get();
+        usersRepository.deleteById(users.getUserNo());
+        //PrincipalDetails 에서 유저아이디 가져오는 코드(여기까지)
+
+    } //현재 로그인되어있는 유저를 삭제하는 메소드
 
     public UsersDto showCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -111,23 +116,15 @@ public class UserService {
         UsersDto usersDto = UsersDto.fromUserEntity(users);
 
         return usersDto;
-    }
-
-    public UsersDto showOneUser(Long id) {
-        Users users = usersRepository.findById(id).orElse(null);
-        if (users == null) {
-            return null;
-        } else {
-            return UsersDto.fromUserEntity(users);
-        }
-    }
-
+    } //현재 로그인 되어있는 회원정보 출력
     public void updateUser(UpdateUserDto updateUserDto) {
-        Users users = updateUserDto.toUserEntity(); // UpdateUserDto 객체를 Users 엔티티로 변환
+        Users users = updateUserDto.toUserEntity(updateUserDto);// UpdateUserDto 객체를 Users 엔티티로 변환
+        String pw = passwordEncoder.encode(users.getPassword());
+        users.setPassword(pw);
         users.setStatus(Status.USER);
         // 기존 사용자 정보를 가져와서 엔티티에 설정하는 등의 추가 작업이 필요할 수 있음
         usersRepository.save(users); // 변환된 Users 엔티티를 저장
-    }
+    } //회원정보 수정하고 저장하는 메소드
     public int getCurrentMoney(){
         //PrincipalDetails 에서 유저아이디 가져오는 코드
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -139,7 +136,7 @@ public class UserService {
         //PrincipalDetails 에서 유저아이디 가져오는 코드
         return currentMoney;
 
-    }
+    } //현재 가지고 있는 금액 출력
 
     public void chargedCoin(int amount) {
         //PrincipalDetails 에서 유저아이디 가져오는 코드
@@ -175,5 +172,5 @@ public class UserService {
         }
         users.setMoney(currentMoney);
         usersRepository.save(users);
-    }
+    } //금액충전
 }

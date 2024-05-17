@@ -43,10 +43,6 @@ public class PcController {
         this.userLoginRegisterService = userLoginRegisterService;
     }
 
-
-
-//    User
-
     @GetMapping("/user/login")
     public String userLoginView(){
         return "/user/user_login";
@@ -119,13 +115,14 @@ public class PcController {
 
 
     @GetMapping("/user/userSelfUpdate")
-    public String showUpdateForm(@RequestParam("updateUserId") Long userNo, Model model) {
+    public String showUpdateForm(Model model) {
 
         // userNo를 사용하여 해당 사용자의 정보를 가져온다
         UsersDto currentUserDto = userService.showCurrentUser(); // 현재 사용자 정보를 가져옴
         UpdateUserDto updateUserDto = new UpdateUserDto(); // 수정할 사용자 정보 DTO 생성
 
         // 현재 사용자의 정보를 updateUserDto에 복사
+        updateUserDto.setUserNo(currentUserDto.getUserNo());
         updateUserDto.setUserId(currentUserDto.getUserId());
         updateUserDto.setName(currentUserDto.getName());
         model.addAttribute("updateUserDto", updateUserDto); // 모델에 추가
@@ -154,7 +151,7 @@ public class PcController {
 
     @PostMapping("/user/userDelete")
     public String deleteUser() {
-        adminService.deleteUser(); // adminService에서 사용자 삭제 로직을 처리
+        userService.deleteUser(); // adminService에서 사용자 삭제 로직을 처리
         return "/user/user_login"; // 사용자 삭제 후 로그인 페이지로
     } // 로그인 한 해당 회원 계정 탈퇴
 
@@ -177,131 +174,6 @@ public class PcController {
         model.addAttribute("currentMoney" , currentMoney);
         return "/user/user_menu_drink";
     } //[음료]메뉴판으로 이동
-
-
-//    -----------------------admin------------------
-
-
-    @GetMapping("/admin/users")
-    public String usersList(@RequestParam(value = "keyword", required = false) String keyword,
-                            @PageableDefault(page = 0, size = 10, sort = "userNo",
-                                    direction = Sort.Direction.ASC) Pageable pageable,
-                            Model model) {
-        Page<UsersDto> dtoPaging;
-
-        if (keyword != null && !keyword.isEmpty()) {
-            dtoPaging = adminService.search(keyword, pageable);
-        } else {
-            dtoPaging = adminService.usersPagingList(pageable);
-        }
-
-        int totalPage = dtoPaging.getTotalPages();
-        List<Integer> barNumbers = pagingService.getPaginationBarNumbers(
-                pageable.getPageNumber(), totalPage);
-        model.addAttribute("paginationBarNumbers", barNumbers);
-        model.addAttribute("searchList", dtoPaging.getContent()); // 페이지에서 컨텐트를 가져와야 함
-        model.addAttribute("paging", dtoPaging);
-
-        return "admin/user_list";
-    }
-
-    @GetMapping("/admin/sell")
-    public String sell(Model model,
-                       @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        // 페이징된 데이터 가져오기
-        Page<Sell> paging = adminService.pagingList(pageable);
-
-        // 현재 페이지의 SellDto 목록
-        List<SellDto> sellDtoList = adminService.sell(paging);
-
-        // 모델에 데이터 추가
-        model.addAttribute("sellDto", sellDtoList);
-        model.addAttribute("paging", paging);
-
-        // 페이지네이션 바 정보 추가
-        List<Integer> barNumbers = pagingService.pageNumbers(pageable.getPageNumber(), paging.getTotalPages());
-        model.addAttribute("barNumbers", barNumbers);
-
-        return "admin/sell";
-    }
-
-    @GetMapping("/admin/sales")
-    public String sales(Model model) {
-        // 가장 많이 판매한 메뉴
-        List<BestSellerDto> bestSellers = adminService.getBestSellers();
-        model.addAttribute("best", bestSellers);
-
-        // 전체 매출
-        List<SellDto> total = adminService.total();
-        model.addAttribute("total", total);
-
-        return "/admin/sales";
-    }
-
-    @GetMapping("/admin/menu")
-    public String menuAll(Model model,
-                          @RequestParam(value = "type", required = false) String type,
-                          @RequestParam(value = "keyword", required = false) String keyword,
-                          @PageableDefault(page = 0, size = 10, sort = "menuId", direction = Sort.Direction.ASC) Pageable pageable) {
-
-        Page<Menu> paging = Page.empty(); // 비어있는 페이지
-        List<MenuDto> menuDtoList;
-
-        // 검색어가 있는 경우
-        if (type != null && keyword != null && !keyword.isEmpty()) {
-            menuDtoList = adminService.menuSearch(type, keyword);
-        } else {
-            // 검색어가 없는 경우
-            paging = adminService.menuPagingList(pageable);
-            menuDtoList = adminService.menuAll(paging);
-        }
-
-        // 모델에 데이터 추가
-        model.addAttribute("menuList", menuDtoList);
-        model.addAttribute("paging", paging);
-
-        // 페이지네이션 바 정보 추가
-        List<Integer> barNumbers = pagingService.pageNumbers(
-                pageable.getPageNumber(),
-                paging.getTotalPages());
-        model.addAttribute("barNumbers", barNumbers);
-
-        return "/admin/menu";
-    }
-
-
-    @GetMapping("/admin/menuUpdate")
-    public String updateView(@RequestParam("updateMenuId") Long menuId, Model model) {
-        MenuDto menuDto = adminService.updateView(menuId);
-        model.addAttribute("menuUpdate", menuDto);
-        return "/admin/menuUpdate";
-    }
-
-    @PostMapping("/admin/menuUpdate")
-    public String update(@ModelAttribute("menuUpdate") MenuDto menuDto) {
-        adminService.update(menuDto);
-        return "redirect:/admin/menu";
-    }
-
-    @GetMapping("/admin/userUpdate")
-    public String userUpdateView(@RequestParam("updateUserNo") Long userNo, Model model) {
-        UsersDto usersDto = adminService.userUpdateView(userNo);
-        model.addAttribute("userUpdate", usersDto);
-        return "/admin/userUpdate";
-    }
-
-    @PostMapping("/admin/userUpdate")
-    public String userUpdate(@ModelAttribute("userUpdate") UsersDto usersDto) {
-        adminService.userUpdate(usersDto);
-        return "redirect:/admin/users";
-    }
-
-    @PostMapping("/admin/userDelete")
-    public String userDelete(@RequestParam("delete") Long userNo) {
-        adminService.delete(userNo);
-        return "redirect:/admin/users";
-    }
-
 
     @GetMapping("/user/userInsertCoin")
     public String userInsertCoin(Model model) {

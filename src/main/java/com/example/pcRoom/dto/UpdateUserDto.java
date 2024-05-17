@@ -4,6 +4,8 @@ import com.example.pcRoom.entity.Users;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Data
 public class UpdateUserDto {
@@ -26,14 +28,14 @@ public class UpdateUserDto {
 
     private int confirmedNum; //관리자인증번호
 
-    public Users toUserEntity() {
+    public Users toUserEntity(UpdateUserDto updateUserDto) {
         Users users = new Users();
-        users.setUserNo(this.userNo); // 사용자 식별자 설정
-        users.setUsername(this.userId);
-        users.setName(this.name);
-        users.setPassword(this.password1); // 비밀번호 수정 필요 시 사용할 수 있음
-        users.setEmail(this.email);
-        users.setPhoneNum(this.phoneNum);
+        users.setUserNo(updateUserDto.getUserNo()); // 사용자 식별자 설정
+        users.setUsername(updateUserDto.getUserId());
+        users.setName(updateUserDto.getName());
+        users.setPassword(updateUserDto.getPassword1()); // 비밀번호 수정 필요 시 사용할 수 있음
+        users.setEmail(updateUserDto.getEmail());
+        users.setPhoneNum(updateUserDto.getPhoneNum());
         return users;
     }
 }
