@@ -2,7 +2,6 @@ package com.example.pcRoom.service;
 
 import com.example.pcRoom.config.PrincipalDetails;
 import com.example.pcRoom.dto.MenuDto;
-import com.example.pcRoom.dto.TotalMoneyDto;
 import com.example.pcRoom.dto.UsersDto;
 import com.example.pcRoom.entity.Menu;
 import com.example.pcRoom.entity.Sell;
@@ -108,36 +107,7 @@ public class UserService {
 
         return usersDto;
     }
-    public List<TotalMoneyDto> totalMoney() {
-        List<Object[]> list = sellRepository.totalMoney();
-        List<TotalMoneyDto> totalMoneyDtos = new ArrayList<>();
 
-        for (Object[] result : list) {
-            Long userNo = ((Number) result[0]).longValue();
-            int totalMoney = ((Number) result[1]).intValue();
-
-            Users users = usersRepository.findById(userNo).orElse(null);
-            UsersDto usersDto = UsersDto.fromUserEntity(users);
-
-            totalMoneyDtos.add(TotalMoneyDto.fromTotalMoney(userNo,totalMoney,usersDto));
-        }
-        // 회원별 구매 순위
-        for (int i = 0; i < totalMoneyDtos.size(); i++) {
-            Integer rank = 1;
-
-            for (int z = 0; z < totalMoneyDtos.size(); z++){
-                if (i != z) {
-                    if (totalMoneyDtos.get(i).getTotalMoney() < totalMoneyDtos.get(z).getTotalMoney()) {
-                        rank++;
-                    }
-                }
-            }
-            totalMoneyDtos.get(i).setRank(rank);
-        }
-        Collections.sort(totalMoneyDtos, Comparator.comparingInt(TotalMoneyDto::getRank));
-
-        return totalMoneyDtos;
-    }
 
     public int getCurrentMoney(){
         //PrincipalDetails 에서 유저아이디 가져오는 코드
