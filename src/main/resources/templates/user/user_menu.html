@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class="menu-label">
-                    <span th:text="${#numbers.formatInteger(currentMoney, 3, 'COMMA') + '원'}"></span>
+                    <span class="order-price-total-1">잔액 ➡️</span>&nbsp;<span id="curMoney" th:text="${#numbers.formatInteger(currentMoney, 3, 'COMMA') + '원'}"></span>
                 </div>
                 <input type="button" value="주문하기" onclick="submitOrder()" class="purchase-button">
             </div><!--주문내역-->

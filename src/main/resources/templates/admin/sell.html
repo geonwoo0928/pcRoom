@@ -24,7 +24,7 @@
                     <div class="card-2">
                         <!-- user name-->
                         <div class="user">
-                            <span th:text="${sell.usersDto != null ? sell.usersDto.name : '탈퇴회원'}"></span>
+                            <span th:text="*{usersDto != null && usersDto.name != null ? usersDto.name : '탈퇴회원'}"></span></span>
                         </div>
                         <!-- menu name , amount -->
                         <div class="menu-amount">

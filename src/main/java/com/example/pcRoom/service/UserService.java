@@ -108,7 +108,6 @@ public class UserService {
         return usersDto;
     }
 
-
     public int getCurrentMoney(){
         //PrincipalDetails 에서 유저아이디 가져오는 코드
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -156,5 +155,4 @@ public class UserService {
         users.setMoney(currentMoney);
         usersRepository.save(users);
     }
-
 }

@@ -1,6 +1,7 @@
 package com.example.pcRoom.controller;
 
 import com.example.pcRoom.config.PrincipalDetails;
+import com.example.pcRoom.constant.Status;
 import com.example.pcRoom.dto.*;
 import com.example.pcRoom.entity.Menu;
 import com.example.pcRoom.entity.Sell;
@@ -96,10 +97,25 @@ public class PcController {
 
     @GetMapping("/user")
     public String userMainPage(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Status status  = null;
+        if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
+            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+            status = principalDetails.getUser().getStatus();
+        }
         UsersDto currentUserDto = userService.showCurrentUser();
+
+        if (status == status.ADMIN) {
+            return "redirect:/admin/sell";
+        }
         model.addAttribute("currentUser", currentUserDto); // 현재 사용자 정보를 모델에 추가
         return "/user/user_main";
     } // 메인화면
+
+    @GetMapping("/admin/user")
+    public String adminUser(){
+        return "/user/user_main";
+    }
 
 
     @GetMapping("/user/userSelfUpdate")
@@ -134,7 +150,6 @@ public class PcController {
         // 사용자 정보가 성공적으로 업데이트되었음을 나타내는 페이지로 리다이렉트합니다.
         return "redirect:/registrationSuccess";
     }
-
 
     @PostMapping("/user/userDelete")
     public String deleteUser() {
@@ -285,6 +300,7 @@ public class PcController {
         adminService.delete(userNo);
         return "redirect:/admin/users";
     }
+
     @GetMapping("/user/userInsertCoin")
     public String userInsertCoin(Model model) {
         int currentMoney = userService.getCurrentMoney();
