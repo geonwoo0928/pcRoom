@@ -1,6 +1,7 @@
 package com.example.pcRoom.controller;
 
 import com.example.pcRoom.config.PrincipalDetails;
+import com.example.pcRoom.constant.Status;
 import com.example.pcRoom.dto.*;
 import com.example.pcRoom.entity.Menu;
 import com.example.pcRoom.entity.Sell;
@@ -95,10 +96,25 @@ public class PcController {
 
     @GetMapping("/user")
     public String userMainPage(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Status status  = null;
+        if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
+            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+            status = principalDetails.getUser().getStatus();
+        }
         UsersDto currentUserDto = userService.showCurrentUser();
+
+        if (status == status.ADMIN) {
+            return "redirect:/admin/sell";
+        }
         model.addAttribute("currentUser", currentUserDto); // 현재 사용자 정보를 모델에 추가
         return "/user/user_main";
     } // 메인화면
+
+    @GetMapping("/admin/user")
+    public String adminUser(){
+        return "/user/user_main";
+    }
 
 
     @GetMapping("/user/userSelfUpdate")
@@ -137,7 +153,7 @@ public class PcController {
 
     @PostMapping("/user/userDelete")
     public String deleteUser(@RequestParam("deleteUserId") Long userNo) {
-        adminService.delete(userNo); // adminService에서 사용자 삭제 로직을 처리
+        adminService.delete(userNo); // adminService 에서 사용자 삭제 로직을 처리
         return "/user/user_login"; // 사용자 삭제 후 로그인 페이지로
     } // 로그인 한 해당 회원 계정 탈퇴
 
@@ -284,22 +300,4 @@ public class PcController {
         adminService.delete(userNo);
         return "redirect:/admin/users";
     }
-
-    @GetMapping("/admin/userRank")
-    public String userRank(Model model) {
-        List<TotalMoneyDto> totalMoneyDtos = userService.totalMoney();
-        model.addAttribute("totalMoney", totalMoneyDtos);
-
-        return "admin/userRank";
-    }
-
-//    @GetMapping("/admin/search")
-//    public String menuSearch(@RequestParam("type") String type,
-//                             @RequestParam("keyword") String keyword,
-//                             Model model) {
-//        List<MenuDto> menuDtoList = adminService.menuSearch(type,keyword);
-//        model.addAttribute("menuSearch", menuDtoList);
-//
-//        return "/admin/menu";
-//    }
 }

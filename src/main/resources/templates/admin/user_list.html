@@ -25,13 +25,11 @@
             <td th:text="*{username}">회원 ID</td>
             <td th:text="*{name}">회원 이름</td>
             <td th:text="*{money}">남은 잔액</td>
-            <td>
 <!--            <td>-->
 <!--                <form th:action="@{/admin/userUpdate}" method="get">-->
 <!--                    <input type="hidden" name="updateUserNo" th:value="*{userNo}">-->
 <!--                    <input type="submit" value="수정">-->
 <!--                </form>-->
-            </td>
 <!--            </td>-->
             <td>
                 <form th:action="@{/admin/userDelete}" method="post">
@@ -46,7 +44,7 @@
         <div class="input-group mb-4">
             <input type="text" name="keyword" placeholder="회원 ID 검색" class="form-control">
             <div class="input-group-append">
-                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                <button type="submit" class="btn btn-primary" ><i class="fas fa-search"></i></button>
             </div>
         </div>
     </form>
