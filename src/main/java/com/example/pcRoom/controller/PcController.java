@@ -177,7 +177,8 @@ public class PcController {
 
     @GetMapping("/user/userInsertCoin")
     public String userInsertCoin(Model model) {
-        int currentMoney = userService.getCurrentMoney();
+        UsersDto usersDto = userService.showCurrentUser();
+        int currentMoney = usersDto.getMoney();
         model.addAttribute("currentMoney" , currentMoney);
         return "user/user_charge";
     }

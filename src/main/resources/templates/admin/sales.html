@@ -1,30 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/admin_layout}">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/admin/table.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/sales.css}">
     <title>매출현황</title>
 </head>
 <body>
 <div class="content" layout:fragment="content">
-    <table>
-        <tr>
-            <th style="color: #FF00FF">판매순위</th>
-            <th>메뉴이름</th>
-            <th>판매량</th>
-        </tr>
-        <tr th:each="b: ${best}" th:object="${b}">
-            <td th:text="*{rank}"></td>
-            <td th:text="*{menuDto.menuName}"></td>
-            <td th:text="*{sumSellAmount} + '개'"></td>
-        </tr>
-        <!--총 매출-->
-        <tr th:each="total : ${total}" th:object="${total}">
-            <td class="total-row" colspan="3" th:text="'💸 총 매출 ➡️' + ' ' + *{total != null && total != null ? total : '0'} + '원 입니다 💜'"></td>
-        </tr>
-    </table>
+    <!-- 테이블과 스크롤을 감싸는 컨테이너 -->
+    <div class="scrollable-table-container">
+        <!-- 스크롤이 가능한 테이블 -->
+        <div class="scrollable-table">
+            <table>
+                <thead>
+                <tr>
+                    <th style="color: #FF00FF">판매순위</th>
+                    <th>메뉴이름</th>
+                    <th>판매량</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- best 리스트에서 10개의 아이템만 반복하여 출력 -->
+                <tr th:each="b, iterStat : ${best}" th:object="${b}" th:if="${iterStat.index < 10}">
+                    <td th:text="*{rank}"></td>
+                    <td th:text="*{menuDto.menuName}"></td>
+                    <td th:text="*{sumSellAmount} + '개'"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- 총 매출 -->
+    <div class="total-row" th:each="total : ${total}" th:object="${total}">
+        <p th:text="'💸 총 매출 ➡️' + ' ' + *{total != null && total != null ? total : '0'} + '원 입니다 💜'"></p>
+    </div>
 </div>
 </body>
 </html>

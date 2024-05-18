@@ -116,7 +116,8 @@ public class UserService {
         UsersDto usersDto = UsersDto.fromUserEntity(users);
 
         return usersDto;
-    } //현재 로그인 되어있는 회원정보 출력
+    } // 현재 로그인 되어있는 회원정보 출력
+
     public void updateUser(UpdateUserDto updateUserDto) {
         Users users = updateUserDto.toUserEntity(updateUserDto);// UpdateUserDto 객체를 Users 엔티티로 변환
         String pw = passwordEncoder.encode(users.getPassword());
@@ -125,18 +126,6 @@ public class UserService {
         // 기존 사용자 정보를 가져와서 엔티티에 설정하는 등의 추가 작업이 필요할 수 있음
         usersRepository.save(users); // 변환된 Users 엔티티를 저장
     } //회원정보 수정하고 저장하는 메소드
-    public int getCurrentMoney(){
-        //PrincipalDetails 에서 유저아이디 가져오는 코드
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int currentMoney = 0;
-        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof PrincipalDetails) {
-            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-            currentMoney = principalDetails.getUser().getMoney();
-        }
-        //PrincipalDetails 에서 유저아이디 가져오는 코드
-        return currentMoney;
-
-    } //현재 가지고 있는 금액 출력
 
     public void chargedCoin(int amount) {
         //PrincipalDetails 에서 유저아이디 가져오는 코드

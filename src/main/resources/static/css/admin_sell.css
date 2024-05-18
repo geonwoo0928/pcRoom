@@ -7,8 +7,17 @@ html {
 body {
     min-height: 100%;
 }
-
+/*sell.html*/
 .content {
+    margin-bottom: 100px; /* 아래쪽 여백 */
+    margin-top: 50px; /* 위쪽에 여백 */
+    margin-left: 400px; /* 왼쪽 여백 */
+    margin-right: 200px; /* 오른쪽에 여백 */
+    background-color: #F5F9FF;
+}
+
+/*menuUpdate.html*/
+.content1 {
     margin-bottom: 100px; /* 아래쪽 여백 */
     margin-top: 50px; /* 위쪽에 여백 */
     margin-left: 400px; /* 왼쪽 여백 */

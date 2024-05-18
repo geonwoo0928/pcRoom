@@ -1,9 +1,7 @@
 package com.example.pcRoom.repository;
 
-import com.example.pcRoom.dto.BestSellerDto;
-import com.example.pcRoom.dto.MenuDto;
-import com.example.pcRoom.dto.SellDto;
 import com.example.pcRoom.entity.Sell;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -61,16 +61,23 @@
             </ul>
         </nav>
         <div class="pagination">
-            <form th:action="@{/admin/menu}" method="get">
-                <select name="type">
-                    <option selected value="">검색 내용</option>
-                    <option value="menuKind">종류</option>
-                    <option value="menuName">이름</option>
-                </select>
-                <input type="text" name="keyword" value="" placeholder="검색어를 입력하세요">
-                <input type="submit" value="검색">
+            <form th:action="@{/admin/menu}" method="get" class="row align-items-center">
+                <div class="col-auto">
+                    <select name="type" >
+                        <option selected value="">검색 내용</option>
+                        <option value="menuKind">종류</option>
+                        <option value="menuName">이름</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <input type="text" name="keyword" value="" placeholder="검색어를 입력하세요" class="form-control">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-info btn-sm">검색</button>
+                </div>
             </form>
         </div>
+
     </div>
 </body>
 </html>

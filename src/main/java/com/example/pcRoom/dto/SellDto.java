@@ -18,6 +18,7 @@ public class SellDto {
 
     private MenuDto menuDto;
     private UsersDto usersDto;
+    private BestSellerDto bestDto;
 
     private Integer total; // 총 매출
 

@@ -4,6 +4,7 @@
       layout:decorate="~{layouts/default_layout}">
 <head>
     <meta charset="UTF-8">
+    <script th:src="@{/js/user.js}" th:inline="javascript"></script>
     <title>Quokka's PC</title>
 </head>
 <body layout:fragment="content">
@@ -23,7 +24,7 @@
             <button type="submit" class="btn btn-outline-primary">사용종료</button>
         </form>
 
-        <form th:action="@{/user/userDelete}" method="post">
+        <form th:action="@{/user/userDelete}" method="post" onsubmit="return confirmDelete2()">
             <input type="submit" value="회원탈퇴">
         </form>
     </div>

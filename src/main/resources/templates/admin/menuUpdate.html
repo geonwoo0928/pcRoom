@@ -5,11 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <title>메뉴 수정</title>
-    <script th:src="@{/js/user.js}" th:inline="javascript"></script>
+    <script th:src="@{/js/menu.js}" th:inline="javascript"></script>
     <link rel="stylesheet" th:href="@{/css/admin_sell.css}">
 </head>
 <body>
-    <div class="content" layout:fragment="content">
+    <div class="content1" layout:fragment="content">
         <form class="row g-3" id="frm" name="frm" th:action="@{/admin/menuUpdate}" method="post" th:object="${menuUpdate}">
             <div class="col-12">
                 <input type="hidden" name="menuId" th:value="*{menuId}">

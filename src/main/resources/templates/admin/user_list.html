@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/admin/table.css}">
+    <script th:src="@{/js/user.js}" th:inline="javascript"></script>
     <title>회원 목록</title>
 </head>
 <body>
@@ -28,7 +29,7 @@
             <td th:text="*{money}">남은 잔액</td>
             <td th:text="*{totalMoney}">총 사용 금액</td>
             <td>
-                <form th:action="@{/admin/userDelete}" method="post">
+                <form th:action="@{/admin/userDelete}" method="post" onsubmit="return confirmDelete()">
                     <input type="hidden" name="delete" th:value="*{userNo}">
                     <input type="submit" value="삭제">
                 </form>
@@ -36,14 +37,6 @@
         </tr>
         </tbody>
     </table>
-    <form th:action="@{/admin/users}" method="GET">
-        <div class="input-group mb-4">
-            <input type="text" name="keyword" placeholder="회원 ID 검색" class="form-control">
-            <div class="input-group-append">
-                <button type="submit" class="btn btn-primary" ><i class="fas fa-search"></i></button>
-            </div>
-        </div>
-    </form>
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item" th:classappend="${paging.number} <= 0? 'disabled'">
@@ -64,6 +57,16 @@
             </li>
         </ul>
     </nav>
+    <div class="pagination">
+        <form th:action="@{/admin/users}" method="GET" class="row align-items-center">
+            <div class="col">
+                <input type="text" name="keyword" placeholder="회원 ID 검색" class="form-control">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-info btn-sm">검색</button>
+            </div>
+        </form>
+    </div>
 </div>
 </body>
 </html>
