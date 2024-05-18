@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Quokka's PC</title>
+</head>
+<body>
+<div class="content" layout:fragment="content">
+    <form th:action="@{/user/userInsertCoin}" method="post" class="container">
+        <div class="charge-body">
+            <div class="payment-container">
+                <div class="price-list">
+                    <table>
+                        <tr>
+                            <td>1,000원</td>
+                            <td>2,000원</td>
+                        </tr>
+                        <tr>
+                            <td>3,000원</td>
+                            <td>5,000원</td>
+                        </tr>
+                        <tr>
+                            <td>10,000원</td>
+                            <td>20,000원</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="charge-form">
+                    <div class="current-money">
+                        현재잔액
+                    </div>
+                    <div class="buttons">
+                        <button type="button" >결제하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

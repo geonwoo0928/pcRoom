@@ -2,12 +2,14 @@ package com.example.pcRoom.controller;
 
 import com.example.pcRoom.config.PrincipalDetails;
 import com.example.pcRoom.dto.*;
+import com.example.pcRoom.entity.Menu;
 import com.example.pcRoom.entity.Sell;
 import com.example.pcRoom.entity.Users;
 import com.example.pcRoom.service.AdminService;
 import com.example.pcRoom.service.PagingService;
 import com.example.pcRoom.service.UserLoginRegisterService;
 import com.example.pcRoom.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -92,10 +94,52 @@ public class PcController {
     } //회원가입 성공페이지
 
     @GetMapping("/user")
-    public String userMainPage() {
-
+    public String userMainPage(Model model) {
+        UsersDto currentUserDto = userService.showCurrentUser();
+        model.addAttribute("currentUser", currentUserDto); // 현재 사용자 정보를 모델에 추가
         return "/user/user_main";
     } // 메인화면
+
+
+    @GetMapping("/user/userSelfUpdate")
+    public String showUpdateForm(HttpSession session, Model model) {
+        // 세션에서 현재 사용자 정보를 가져오기
+        Users currentUser = (Users) session.getAttribute("user");
+        if (currentUser == null) {
+            // 로그인되지 않은 사용자는 로그인 페이지로 리다이렉트
+            return "redirect:/user/user_login";
+        }
+        // 수정 폼에 사용할 사용자 정보를 모델에 추가합니다.
+        model.addAttribute("user", currentUser);
+        return "/user/userSelfUpdate";
+    }
+
+    @PostMapping("/user/userSelfUpdate")
+    public String userSelfUpdate(HttpSession session, @ModelAttribute("user") Users updatedUser){
+
+        // 세션에서 현재 사용자 정보를 가져옵니다.
+        Users currentUser = (Users) session.getAttribute("user");
+        if (currentUser == null) {
+            // 로그인되지 않은 사용자는 로그인 페이지로 리다이렉트합니다.
+            return "redirect:/login";
+        }
+        // 수정된 정보로 사용자 정보를 업데이트합니다.
+        currentUser.setName(updatedUser.getName());
+        currentUser.setEmail(updatedUser.getEmail());
+        // 나머지 필드도 업데이트하는 작업을 수행합니다.
+
+        // 업데이트된 사용자 정보를 세션에 다시 저장합니다.
+        session.setAttribute("user", currentUser);
+        // 사용자 정보가 성공적으로 업데이트되었음을 나타내는 페이지로 리다이렉트합니다.
+        return "redirect:/registrationSuccess";
+    }
+
+
+    @PostMapping("/user/userDelete")
+    public String deleteUser(@RequestParam("deleteUserId") Long userNo) {
+        adminService.delete(userNo); // adminService에서 사용자 삭제 로직을 처리
+        return "/user/user_login"; // 사용자 삭제 후 로그인 페이지로
+    } // 로그인 한 해당 회원 계정 탈퇴
 
     @GetMapping("/user/userMenu")
     public String userMenu(Model model) {
@@ -176,12 +220,38 @@ public class PcController {
 
         return "/admin/sales";
     }
+
     @GetMapping("/admin/menu")
-    public String menuAll(Model model) {
-        List<MenuDto> menuDtoList = adminService.menuAll();
+    public String menuAll(Model model,
+                          @RequestParam(value = "type", required = false) String type,
+                          @RequestParam(value = "keyword", required = false) String keyword,
+                          @PageableDefault(page = 0, size = 10, sort = "menuId", direction = Sort.Direction.ASC) Pageable pageable) {
+
+        Page<Menu> paging = Page.empty(); // 비어있는 페이지
+        List<MenuDto> menuDtoList;
+
+        // 검색어가 있는 경우
+        if (type != null && keyword != null && !keyword.isEmpty()) {
+            menuDtoList = adminService.menuSearch(type, keyword);
+        } else {
+            // 검색어가 없는 경우
+            paging = adminService.menuPagingList(pageable);
+            menuDtoList = adminService.menuAll(paging);
+        }
+
+        // 모델에 데이터 추가
         model.addAttribute("menuList", menuDtoList);
+        model.addAttribute("paging", paging);
+
+        // 페이지네이션 바 정보 추가
+        List<Integer> barNumbers = pagingService.pageNumbers(
+                pageable.getPageNumber(),
+                paging.getTotalPages());
+        model.addAttribute("barNumbers", barNumbers);
+
         return "/admin/menu";
     }
+
 
     @GetMapping("/admin/menuUpdate")
     public String updateView(@RequestParam("updateMenuId") Long menuId, Model model) {
@@ -215,11 +285,21 @@ public class PcController {
         return "redirect:/admin/users";
     }
 
-    @GetMapping("admin/userRank")
+    @GetMapping("/admin/userRank")
     public String userRank(Model model) {
         List<TotalMoneyDto> totalMoneyDtos = userService.totalMoney();
         model.addAttribute("totalMoney", totalMoneyDtos);
 
         return "admin/userRank";
     }
+
+//    @GetMapping("/admin/search")
+//    public String menuSearch(@RequestParam("type") String type,
+//                             @RequestParam("keyword") String keyword,
+//                             Model model) {
+//        List<MenuDto> menuDtoList = adminService.menuSearch(type,keyword);
+//        model.addAttribute("menuSearch", menuDtoList);
+//
+//        return "/admin/menu";
+//    }
 }
