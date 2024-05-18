@@ -2,9 +2,13 @@ package com.example.pcRoom.dto;
 
 import com.example.pcRoom.constant.Status;
 import com.example.pcRoom.entity.Users;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UsersDto {
 
     private Long userNo;
@@ -13,6 +17,7 @@ public class UsersDto {
     private String password;
     private int money;
     private Status status; //관리자 , 일반
+    private int totalMoney;
 
     public UsersDto(Long userNo, String userId, String name, String password, int money, String status){
     }
@@ -25,6 +30,19 @@ public class UsersDto {
         this.money = money;
         this.status = status;
     }
+
+    public Users toUserEntity() {
+        return new Users(
+                this.userNo,
+                this.userId,
+                this.name,
+                this.password,
+                this.money,
+                this.status
+        );
+    }
+
+
 
     //    Entity를 Dto로 변환
     public static UsersDto fromUserEntity(Users users) {

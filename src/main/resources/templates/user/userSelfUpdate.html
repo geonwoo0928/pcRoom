@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/user_signUp_css.css}">
+    <title>내 정보 수정</title>
+</head>
+<body>
+<form th:action="@{/user/userSelfUpdate/{userNo}(userNo=${updateUserDto.userNo})}" method="post" th:object="${updateUserDto}">
+    <div class="header">내 정보 수정</div>
+    <table>
+        <input type="hidden" name="userNo" th:value="*{userNo}">
+        <tr>
+            <td>아이디</td>
+            <td><input id="username" name="userId" type="text" th:value="*{userId}"></td>
+            <td><input type="button" value="중복확인" class="idCheckBtn"></td>
+        </tr>
+        <tr>
+            <td>이름</td>
+            <td colspan="2"><input name="name" type="text" th:value="*{name}" readonly></td>
+        </tr>
+        <tr>
+            <td>새로운 비밀번호</td>
+            <td colspan="2"><input id="password1" name="password1" type="password" th:value="*{password1}"></td>
+        </tr>
+        <tr>
+            <td class="errorCode" th:errors="${updateUserDto.password1}"></td>
+        </tr>
+        <tr>
+            <td>새로운 비밀번호 확인</td>
+            <td colspan="2"><input id="password2" name="password2" type="password" th:value="*{password2}"></td>
+        </tr>
+        <tr>
+            <td class="errorCode" th:errors="${updateUserDto.password2}"></td>
+        </tr>
+        <tr>
+            <td>이메일</td>
+            <td colspan="2"><input id="email" name="email" type="email" th:value="*{email}"></td>
+        </tr>
+        <tr>
+            <td class="errorCode" th:errors="${updateUserDto.email}"></td>
+        </tr>
+        <tr>
+            <td>전화번호</td>
+            <td colspan="2"><input id="phoneNum" name="phoneNum" type="text" th:value="*{phoneNum}"></td>
+        </tr>
+    </table>
+    <div class="bottomBtns">
+        <input type="submit" value="수정완료" class="submitBtn">
+        <button type="reset" class="resetBtn">다시입력</button>
+    </div>
+</form>
+</body>
+</html>

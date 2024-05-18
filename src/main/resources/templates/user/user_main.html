@@ -5,7 +5,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Quokka's PC</title>
+    <link rel="stylesheet" th:href="@{/css/user-info-box.css}">
 </head>
 <body layout:fragment="content">
+
+    <div class="userInfoBox">
+        <div class="box-half1">
+            <div class="box-half3">
+                No.036
+            </div>
+            <div class="box-half4">
+                <div th:text="'이름 :      '+${currentUser.name}"></div>
+                <div th:text="'현재잔액 :      '+${#numbers.formatInteger(currentUser.money, 3, 'COMMA') + '원'}"></div>
+                <div th:text="'등급 :      '+${currentUser.status}"></div>
+            </div>
+        </div>
+        <div class="box-half2">
+            <form th:action="@{/user/userSelfUpdate}" method="get">
+                <input type="submit" value="내정보수정">
+            </form>
+
+
+            <form method="post" th:action="@{/logout}" >
+                <!--                    <input type="hidden" name="_csrf" value="${_csrf.token}" />  CSRF 토큰 추가  -->
+                <button type="submit" class="btn btn-outline-primary">사용종료</button>
+            </form>
+
+            <form th:action="@{/user/userDelete}" method="post">
+                <input type="submit" value="회원탈퇴">
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>

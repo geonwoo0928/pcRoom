@@ -1,6 +1,7 @@
 package com.example.pcRoom.controller;
 
 import com.example.pcRoom.config.PrincipalDetails;
+import com.example.pcRoom.constant.Status;
 import com.example.pcRoom.dto.*;
 import com.example.pcRoom.entity.Menu;
 import com.example.pcRoom.entity.Sell;
@@ -24,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -40,10 +42,6 @@ public class PcController {
         this.pagingService = pagingService;
         this.userLoginRegisterService = userLoginRegisterService;
     }
-
-
-
-//    User
 
     @GetMapping("/user/login")
     public String userLoginView(){
@@ -96,48 +94,61 @@ public class PcController {
     @GetMapping("/user")
     public String userMainPage(Model model) {
         UsersDto currentUserDto = userService.showCurrentUser();
+        Status status = currentUserDto.getStatus();
+
+        if (status == status.ADMIN) {
+            return "redirect:/admin/sell";
+        }
         model.addAttribute("currentUser", currentUserDto); // 현재 사용자 정보를 모델에 추가
         return "/user/user_main";
     } // 메인화면
 
+    @GetMapping("/admin/user")
+    public String adminUser(Model model){
+        UsersDto currentUserDto = userService.showCurrentUser();
+        model.addAttribute("currentUser" , currentUserDto);
+        return "/user/user_main";
+    } // 관리자페이지 -> 유저페이지
+
 
     @GetMapping("/user/userSelfUpdate")
-    public String showUpdateForm(HttpSession session, Model model) {
-        // 세션에서 현재 사용자 정보를 가져오기
-        Users currentUser = (Users) session.getAttribute("user");
-        if (currentUser == null) {
-            // 로그인되지 않은 사용자는 로그인 페이지로 리다이렉트
-            return "redirect:/user/user_login";
-        }
-        // 수정 폼에 사용할 사용자 정보를 모델에 추가합니다.
-        model.addAttribute("user", currentUser);
+    public String showUpdateForm(Model model) {
+
+        // userNo를 사용하여 해당 사용자의 정보를 가져온다
+        UsersDto currentUserDto = userService.showCurrentUser(); // 현재 사용자 정보를 가져옴
+        UpdateUserDto updateUserDto = new UpdateUserDto(); // 수정할 사용자 정보 DTO 생성
+
+        // 현재 사용자의 정보를 updateUserDto에 복사
+        updateUserDto.setUserNo(currentUserDto.getUserNo());
+        updateUserDto.setUserId(currentUserDto.getUserId());
+        updateUserDto.setName(currentUserDto.getName());
+        model.addAttribute("updateUserDto", updateUserDto); // 모델에 추가
         return "/user/userSelfUpdate";
     }
 
-    @PostMapping("/user/userSelfUpdate")
-    public String userSelfUpdate(HttpSession session, @ModelAttribute("user") Users updatedUser){
-
-        // 세션에서 현재 사용자 정보를 가져옵니다.
-        Users currentUser = (Users) session.getAttribute("user");
-        if (currentUser == null) {
-            // 로그인되지 않은 사용자는 로그인 페이지로 리다이렉트합니다.
-            return "redirect:/login";
+    @PostMapping("/user/userSelfUpdate/{userNo}")
+    public String userSelfUpdate(@ModelAttribute("updateUserDto") @Valid UpdateUserDto updateUserDto,
+                                 BindingResult bindingResult) {
+        // 유효성 검사 결과 확인
+        if (bindingResult.hasErrors()) {
+            // 에러가 있을 경우 수정 폼으로 다시 이동
+            return "/user/userSelfUpdate";
         }
-        // 수정된 정보로 사용자 정보를 업데이트합니다.
-        currentUser.setName(updatedUser.getName());
-        currentUser.setEmail(updatedUser.getEmail());
-        // 나머지 필드도 업데이트하는 작업을 수행합니다.
 
-        // 업데이트된 사용자 정보를 세션에 다시 저장합니다.
-        session.setAttribute("user", currentUser);
-        // 사용자 정보가 성공적으로 업데이트되었음을 나타내는 페이지로 리다이렉트합니다.
-        return "redirect:/registrationSuccess";
+        if (!(updateUserDto.getPassword1().equals(updateUserDto.getPassword2()))) {
+            bindingResult.rejectValue("password2", "password incorrect", "비밀번호가 일치하지 않습니다");
+            return "/user/userSelfUpdate";
+        }
+
+        // 수정된 사용자 정보 업데이트
+        userService.updateUser(updateUserDto);
+
+        return "redirect:/user";
     }
 
-
     @PostMapping("/user/userDelete")
-    public String deleteUser(@RequestParam("deleteUserId") Long userNo) {
-        adminService.delete(userNo); // adminService에서 사용자 삭제 로직을 처리
+    public String deleteUser() {
+        userService.deleteUser(); // adminService에서 사용자 삭제 로직을 처리
         return "/user/user_login"; // 사용자 삭제 후 로그인 페이지로
     } // 로그인 한 해당 회원 계정 탈퇴
 
@@ -161,145 +172,17 @@ public class PcController {
         return "/user/user_menu_drink";
     } //[음료]메뉴판으로 이동
 
-
-//    -----------------------admin------------------
-
-
-    @GetMapping("/admin/users")
-    public String usersList(@RequestParam(value = "keyword", required = false) String keyword,
-                            @PageableDefault(page = 0, size = 10, sort = "userNo",
-                                    direction = Sort.Direction.ASC) Pageable pageable,
-                            Model model) {
-        Page<Users> paging;
-
-        if (keyword != null && !keyword.isEmpty()) {
-            paging = adminService.search(keyword, pageable);
-        } else {
-            paging = adminService.usersPagingList(pageable);
-        }
-
-        int totalPage = paging.getTotalPages();
-        List<Integer> barNumbers = pagingService.getPaginationBarNumbers(
-                pageable.getPageNumber(), totalPage);
-        model.addAttribute("paginationBarNumbers", barNumbers);
-        model.addAttribute("searchList", paging.getContent()); // 페이지에서 컨텐트를 가져와야 함
-        model.addAttribute("paging", paging);
-
-        return "admin/user_list";
+    @GetMapping("/user/userInsertCoin")
+    public String userInsertCoin(Model model) {
+        UsersDto usersDto = userService.showCurrentUser();
+        int currentMoney = usersDto.getMoney();
+        model.addAttribute("currentMoney" , currentMoney);
+        return "user/user_charge";
     }
 
-    @GetMapping("/admin/sell")
-    public String sell(Model model,
-                       @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        // 페이징된 데이터 가져오기
-        Page<Sell> paging = adminService.pagingList(pageable);
-
-        // 현재 페이지의 SellDto 목록
-        List<SellDto> sellDtoList = adminService.sell(paging);
-
-        // 모델에 데이터 추가
-        model.addAttribute("sellDto", sellDtoList);
-        model.addAttribute("paging", paging);
-
-        // 페이지네이션 바 정보 추가
-        List<Integer> barNumbers = pagingService.pageNumbers(pageable.getPageNumber(), paging.getTotalPages());
-        model.addAttribute("barNumbers", barNumbers);
-
-        return "admin/sell";
-    }
-
-    @GetMapping("/admin/sales")
-    public String sales(Model model) {
-        // 가장 많이 판매한 메뉴
-        List<BestSellerDto> bestSellers = adminService.getBestSellers();
-        model.addAttribute("best", bestSellers);
-
-        // 전체 매출
-        List<SellDto> total = adminService.total();
-        model.addAttribute("total", total);
-
-        return "/admin/sales";
-    }
-
-    @GetMapping("/admin/menu")
-    public String menuAll(Model model,
-                          @RequestParam(value = "type", required = false) String type,
-                          @RequestParam(value = "keyword", required = false) String keyword,
-                          @PageableDefault(page = 0, size = 10, sort = "menuId", direction = Sort.Direction.ASC) Pageable pageable) {
-
-        Page<Menu> paging = Page.empty(); // 비어있는 페이지
-        List<MenuDto> menuDtoList;
-
-        // 검색어가 있는 경우
-        if (type != null && keyword != null && !keyword.isEmpty()) {
-            menuDtoList = adminService.menuSearch(type, keyword);
-        } else {
-            // 검색어가 없는 경우
-            paging = adminService.menuPagingList(pageable);
-            menuDtoList = adminService.menuAll(paging);
-        }
-
-        // 모델에 데이터 추가
-        model.addAttribute("menuList", menuDtoList);
-        model.addAttribute("paging", paging);
-
-        // 페이지네이션 바 정보 추가
-        List<Integer> barNumbers = pagingService.pageNumbers(
-                pageable.getPageNumber(),
-                paging.getTotalPages());
-        model.addAttribute("barNumbers", barNumbers);
-
-        return "/admin/menu";
-    }
-
-
-    @GetMapping("/admin/menuUpdate")
-    public String updateView(@RequestParam("updateMenuId") Long menuId, Model model) {
-        MenuDto menuDto = adminService.updateView(menuId);
-        model.addAttribute("menuUpdate", menuDto);
-        return "/admin/menuUpdate";
-    }
-
-    @PostMapping("/admin/menuUpdate")
-    public String update(@ModelAttribute("menuUpdate") MenuDto menuDto) {
-        adminService.update(menuDto);
-        return "redirect:/admin/menu";
-    }
-
-    @GetMapping("/admin/userUpdate")
-    public String userUpdateView(@RequestParam("updateUserNo") Long userNo, Model model) {
-        UsersDto usersDto = adminService.userUpdateView(userNo);
-        model.addAttribute("userUpdate", usersDto);
-        return "/admin/userUpdate";
-    }
-
-    @PostMapping("/admin/userUpdate")
-    public String userUpdate(@ModelAttribute("userUpdate") UsersDto usersDto) {
-        adminService.userUpdate(usersDto);
-        return "redirect:/admin/users";
-    }
-
-    @PostMapping("/admin/userDelete")
-    public String userDelete(@RequestParam("delete") Long userNo) {
-        adminService.delete(userNo);
-        return "redirect:/admin/users";
-    }
-
-    @GetMapping("/admin/userRank")
-    public String userRank(Model model) {
-        List<TotalMoneyDto> totalMoneyDtos = userService.totalMoney();
-        model.addAttribute("totalMoney", totalMoneyDtos);
-
-        return "admin/userRank";
-    }
-
-//    @GetMapping("/admin/search")
-//    public String menuSearch(@RequestParam("type") String type,
-//                             @RequestParam("keyword") String keyword,
-//                             Model model) {
-//        List<MenuDto> menuDtoList = adminService.menuSearch(type,keyword);
-//        model.addAttribute("menuSearch", menuDtoList);
-//
-//        return "/admin/menu";
-//    }
+    @PostMapping("/user/userInsertCoin")
+    public String chargedCoin(@RequestParam("amount") int amount){
+        userService.chargedCoin(amount);
+        return "redirect:/user/userInsertCoin";
+    } //금액충전
 }

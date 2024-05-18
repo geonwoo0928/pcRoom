@@ -1,8 +1,9 @@
 package com.example.pcRoom.service;
 
 import com.example.pcRoom.config.PrincipalDetails;
+import com.example.pcRoom.constant.Status;
 import com.example.pcRoom.dto.MenuDto;
-import com.example.pcRoom.dto.TotalMoneyDto;
+import com.example.pcRoom.dto.UpdateUserDto;
 import com.example.pcRoom.dto.UsersDto;
 import com.example.pcRoom.entity.Menu;
 import com.example.pcRoom.entity.Sell;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -30,6 +33,8 @@ public class UserService {
     SellRepository sellRepository;
     @Autowired
     AdminService adminService;
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
     public List<MenuDto> showAllMenuKind(String kind) {
         List<Menu> menuList = menuRepository.findBymenuKind(kind);
@@ -41,14 +46,6 @@ public class UserService {
         }
         return menuDtoList;
     } // 메뉴 전체를 가져오는 메소드
-
-    public List<UsersDto> usersList(){
-        List<UsersDto> usersDto = new ArrayList<>();
-        return usersRepository.findAll()
-                .stream()
-                .map(x -> UsersDto.fromUserEntity(x))
-                .toList();
-    } // 모든 회원 정보 출력
 
     public void putMenuList(List<MenuDto> selectedMenus) throws Exception {
 
@@ -83,17 +80,29 @@ public class UserService {
                 sellRepository.save(sell);
             }
         } // 메뉴이름 추출 , 빈도 계산
-    }
-    public Page<Users> pagingList(Pageable pageable) {
-        return usersRepository.findAll(pageable);
-    }
+    } //메뉴 주문
 
     public boolean userIdExist(String userId) {
-        if(usersRepository.findByUsername(userId) == null){
+        if(usersRepository.findByUsername(userId).isPresent()){
             return true;
         }
         return false;
     } //사용자 Id 중복확인
+
+    public void deleteUser(){
+        //PrincipalDetails 에서 유저아이디 가져오는 코드(여기서부터)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = null;
+        if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
+            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+            currentUserName = principalDetails.getUsername();
+        }
+        Optional<Users> userOptional = usersRepository.findByUsername(currentUserName);
+        Users users = userOptional.get();
+        usersRepository.deleteById(users.getUserNo());
+        //PrincipalDetails 에서 유저아이디 가져오는 코드(여기까지)
+
+    } //현재 로그인되어있는 유저를 삭제하는 메소드
 
     public UsersDto showCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -107,36 +116,50 @@ public class UserService {
         UsersDto usersDto = UsersDto.fromUserEntity(users);
 
         return usersDto;
-    }
-    public List<TotalMoneyDto> totalMoney() {
-        List<Object[]> list = sellRepository.totalMoney();
-        List<TotalMoneyDto> totalMoneyDtos = new ArrayList<>();
+    } //현재 로그인 되어있는 회원정보 출력
 
-        for (Object[] result : list) {
-            Long userNo = ((Number) result[0]).longValue();
-            int totalMoney = ((Number) result[1]).intValue();
+    public void updateUser(UpdateUserDto updateUserDto) {
+        Users users = updateUserDto.toUserEntity(updateUserDto);// UpdateUserDto 객체를 Users 엔티티로 변환
+        String pw = passwordEncoder.encode(users.getPassword());
+        users.setPassword(pw);
+        users.setStatus(Status.USER);
+        // 기존 사용자 정보를 가져와서 엔티티에 설정하는 등의 추가 작업이 필요할 수 있음
+        usersRepository.save(users); // 변환된 Users 엔티티를 저장
+    } //회원정보 수정하고 저장하는 메소드
 
-            Users users = usersRepository.findById(userNo).orElse(null);
-            UsersDto usersDto = UsersDto.fromUserEntity(users);
-
-            totalMoneyDtos.add(TotalMoneyDto.fromTotalMoney(userNo,totalMoney,usersDto));
+    public void chargedCoin(int amount) {
+        //PrincipalDetails 에서 유저아이디 가져오는 코드
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int currentMoney = 0;
+        Users users = new Users();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof PrincipalDetails) {
+            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+            currentMoney = principalDetails.getUser().getMoney();
+            users = principalDetails.getUser();
         }
-        // 회원별 구매 순위
-        for (int i = 0; i < totalMoneyDtos.size(); i++) {
-            Integer rank = 1;
+        //PrincipalDetails 에서 유저아이디 가져오는 코드
 
-            for (int z = 0; z < totalMoneyDtos.size(); z++){
-                if (i != z) {
-                    if (totalMoneyDtos.get(i).getTotalMoney() < totalMoneyDtos.get(z).getTotalMoney()) {
-                        rank++;
-                    }
-                }
-            }
-            totalMoneyDtos.get(i).setRank(rank);
+        switch (amount) {
+            case 1000:
+                currentMoney += 1000;
+                break;
+            case 2000:
+                currentMoney += 2000;
+                break;
+            case 3000:
+                currentMoney += 3000;
+                break;
+            case 5000:
+                currentMoney += 5000;
+                break;
+            case 10000:
+                currentMoney += 10000;
+                break;
+            case 20000:
+                currentMoney += 20000;
+                break;
         }
-        Collections.sort(totalMoneyDtos, Comparator.comparingInt(TotalMoneyDto::getRank));
-
-        return totalMoneyDtos;
-    }
-
+        users.setMoney(currentMoney);
+        usersRepository.save(users);
+    } //금액충전
 }

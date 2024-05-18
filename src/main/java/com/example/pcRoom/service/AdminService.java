@@ -1,5 +1,6 @@
 package com.example.pcRoom.service;
 
+import com.example.pcRoom.config.PrincipalDetails;
 import com.example.pcRoom.dto.BestSellerDto;
 import com.example.pcRoom.dto.MenuDto;
 import com.example.pcRoom.dto.SellDto;
@@ -14,13 +15,12 @@ import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.function.ToIntFunction;
 
 @Service
@@ -135,24 +135,29 @@ public class AdminService {
         // 정렬 대상: bestSellers List
         // 정렬 기준: BestSellerDto 의 getRank() int(rank 타입이 int) 값
         // 오름차순 정렬: Comparator.comparingInt() -> 기본적으로 오름차순으로 정렬 됨
-    }
+    } //제일 많이 나간 메뉴 가져오는 메소드
 
-    public List<MenuDto> menuAll() { // 메뉴 목록 보이기
+    public List<MenuDto> menuAll(Page<Menu> paging) {
         List<Menu> menuList = menuRepository.findAll();
         List<MenuDto> menuDtoList = new ArrayList<>();
 
-        for(Menu menu : menuList){
+        for(Menu menu : paging.getContent()){
             menuDtoList.add(MenuDto.fromMenuEntity(menu));
         }
         Collections.sort(menuDtoList, Comparator.comparingLong(MenuDto::getMenuId));
         return menuDtoList;
-    }
+    } // 메뉴 전체를 보여주는 메소드
+
+    public Page<Menu> menuPagingList(Pageable pageable) {
+        return menuRepository.findAll(pageable);
+    } // 메뉴 전체를 페이징 해주는 메소드
+
 
     public MenuDto updateView(Long menuId) {
         return menuRepository.findById(menuId) // ID로 메뉴 찾기
                 .map(x -> MenuDto.fromMenuEntity(x)) // Entity -> dto
                 .orElse(null);
-    }
+    } //menu_id를 이용해서 메뉴정보를 찾는 메소드
 
     public void update(MenuDto menuDto) { // 메뉴 수정
         Menu menu = menuRepository.findById(menuDto.getMenuId()).orElse(null); // id로 메뉴찾기
@@ -163,31 +168,72 @@ public class AdminService {
             menu.setMenuAmount(menu.getMenuAmount() + menuDto.getMenuAmount());
             menuRepository.save(menu); // 저장
         }
-    }
+    } //메뉴 수정 하는 메소드
 
     public UsersDto userUpdateView(Long userNo) {
         return usersRepository.findById(userNo)
                 .map(x -> UsersDto.fromUserEntity(x))
                 .orElse(null);
-    }
+    } // 유저 번호를 이용해서 수정할 유저 정보 가져오는 메소드
 
     public void userUpdate(UsersDto usersDto) {
         String pw = passwordEncoder.encode(usersDto.getPassword()); //암호화된 비밀번호
         usersDto.setPassword(pw);
         Users users = usersDto.fromUserDto(usersDto);
         usersRepository.save(users);
-    }
+    } //유저 정보를 수정하고 저장하는 메소드
 
     public void delete(Long userNo) {
         usersRepository.deleteById(userNo);
-    }
+    } //유저번호를 이용해서 삭제하는 메소드
 
-    public Page<Users> search(String keyword, Pageable pageable) {
-        return usersRepository.findByUsernameContaining(keyword, pageable);
-    }
 
-    public Page<Users> usersPagingList(Pageable pageable) {
-        return usersRepository.findAll(pageable);
+
+    public Page<UsersDto> search(String keyword, Pageable pageable) {
+        Page<Users> page = usersRepository.findByUsernameContaining(keyword, pageable);
+        return page.map(this::convertToDto);
+    } // 키워드 이용해서 찾은 사용자 정보 페이징 출력
+
+    public Page<UsersDto> usersPagingList(Pageable pageable) {
+        Page<Users> page = usersRepository.findAll(pageable);
+        return page.map(this::convertToDto);
     } // 사용자 정보 페이징 출력
+
+    private UsersDto convertToDto(Users user) {
+        Integer totalMoney = sellRepository.getTotalMoney(user.getUserNo());
+        if (totalMoney == null) {
+            totalMoney = 0; // 판매 기록이 없는 경우 총 금액을 0으로 설정
+        }
+        return new UsersDto(
+                user.getUserNo(),
+                user.getUsername(),
+                user.getName(),
+                user.getPassword(),
+                user.getMoney(),
+                user.getStatus(),
+                totalMoney
+        );
+    }  //search(),usersPagingList()메소드에서 반환된 Users를 Dto 타입으로 변환
+
+
+    public List<MenuDto> menuSearch(String type, String keyword) { // 메뉴 검색
+        List<MenuDto> menuDtoList = new ArrayList<>();
+
+        switch (type) {
+            case "menuKind" :
+                menuDtoList = menuRepository.searchMenuKind(keyword)
+                        .stream()
+                        .map(x -> MenuDto.fromMenuEntity(x))
+                        .toList();
+                break;
+            case "menuName" :
+                menuDtoList = menuRepository.searchMenuName(keyword)
+                        .stream()
+                        .map(x -> MenuDto.fromMenuEntity(x))
+                        .toList();
+                break;
+        }
+        return menuDtoList;
+    } //메뉴 검색하는 메소드
 }
 

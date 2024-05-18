@@ -15,38 +15,18 @@
             <th>회원 번호</th>
             <th>회원 ID</th>
             <th>회원 이름</th>
-<<<<<<< HEAD
-            <th>회원 비밀번호</th>
             <th>남은 잔액</th>
             <th>총 사용 금액</th>
-=======
-            <th>남은 잔액</th>
->>>>>>> 9e5b3e14b7bf5318397b71755cbcef1a1d66e455
-            <th colspan="2"></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
-<<<<<<< HEAD
-        <tr th:each="user, userStat : ${paging}" th:object="${user}">
-            <td th:text="*{userNo}">회원 번호</td>
-            <td th:text="*{username}">회원 ID</td>
-            <td th:text="*{name}">회원 이름</td>
-            <td th:text="*{password}">회원 비밀번호</td>
-            <td th:text="*{money}">남은 잔액</td>
-            <td th:text="*{money}">총 사용 금액</td>
-=======
         <tr th:each="user : ${paging}" th:object="${user}">
             <td th:text="*{userNo}">회원 번호</td>
-            <td th:text="*{username}">회원 ID</td>
+            <td th:text="*{userId}">회원 ID</td>
             <td th:text="*{name}">회원 이름</td>
             <td th:text="*{money}">남은 잔액</td>
->>>>>>> 9e5b3e14b7bf5318397b71755cbcef1a1d66e455
-            <td>
-                <form th:action="@{/admin/userUpdate}" method="get">
-                    <input type="hidden" name="updateUserNo" th:value="*{userNo}">
-                    <input type="submit" value="수정">
-                </form>
-            </td>
+            <td th:text="*{totalMoney}">총 사용 금액</td>
             <td>
                 <form th:action="@{/admin/userDelete}" method="post">
                     <input type="hidden" name="delete" th:value="*{userNo}">
@@ -56,19 +36,14 @@
         </tr>
         </tbody>
     </table>
-<<<<<<< HEAD
-
     <form th:action="@{/admin/users}" method="GET">
         <div class="input-group mb-4">
             <input type="text" name="keyword" placeholder="회원 ID 검색" class="form-control">
             <div class="input-group-append">
-                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                <button type="submit" class="btn btn-primary" ><i class="fas fa-search"></i></button>
             </div>
         </div>
     </form>
-
-=======
->>>>>>> 9e5b3e14b7bf5318397b71755cbcef1a1d66e455
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item" th:classappend="${paging.number} <= 0? 'disabled'">

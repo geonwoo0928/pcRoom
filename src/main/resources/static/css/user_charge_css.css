@@ -1,12 +1,3 @@
-/**body{
-    font-family: 'Roboto', sans-serif;
-    font-weight: 600;
-}
-.charge-form{
-    width : 50%;
-    height : 500px;
-    background-color : #cad2de;
-}**/
 
 body {
   font-family: Arial, sans-serif;
@@ -40,6 +31,7 @@ body {
   display : flex;
   justify-content : center;
   align-items : center;
+  margin-right : 20px;
 }
 
 .charge-form{
@@ -49,6 +41,43 @@ body {
   width : 35%;
   height : 423px;
   background-color : #303030;
+}
+
+.charge-form-top{
+  height : 90px;
+  color : #ffffff;
+  display : flex;
+  text-align : center;
+  justify-content : space-between;
+  align-items : center;
+  font-size : 18px;
+}
+
+.current-money-left{
+  padding-left : 10px;
+}
+
+.current-money-right {
+  font-size : 29px;
+  padding-right : 10px;
+}
+
+.blank-space {
+  display : flex;
+  justify-content : center;
+  align-items : center;
+  font-size : 50px;
+  color : #fff;
+  margin-bottom : 10px;
+  margin-left : 8px;
+  width : 95%;
+  height : 60%;
+  padding : 10px;
+  border-radius : 3px;
+  background-color : #262423;
+  color : #fff;
+  text-align : center;
+
 }
 
 table {
@@ -64,6 +93,12 @@ td {
   border-radius : 3px;
 }
 
+td input {
+  border : none;
+  font-size : 20px;
+  font-weight : 700;
+}
+
 .buttons {
   display: flex;
   justify-content: space-around;
@@ -71,4 +106,11 @@ td {
   display: flex; /* 버튼들을 내부적으로도 flex로 관리 */
   flex-direction: column; /* 버튼을 수직으로 배치 */
   gap: 10px; /* 버튼 사이의 간격 설정 */
+}
+
+.buttons button{
+  background-color : #03aeff;
+  height : 50px;
+  color : #fff;
+  font-weight : 800;
 }

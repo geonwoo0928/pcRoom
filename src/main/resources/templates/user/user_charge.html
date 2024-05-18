@@ -5,6 +5,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Quokka's PC</title>
+    <link rel="stylesheet" th:href="@{/css/user_charge_css.css}">
+    <script>
+        function setAmount(value) {
+            document.getElementById('amount').value = value;
+            const formattedValue = Number(value).toLocaleString() + '원';
+            document.getElementById('blank-space').innerText = formattedValue;
+        }
+    </script>
 </head>
 <body>
 <div class="content" layout:fragment="content">
@@ -14,31 +22,54 @@
                 <div class="price-list">
                     <table>
                         <tr>
-                            <td>1,000원</td>
-                            <td>2,000원</td>
+                            <td>
+                                <input type="button" name="amountButton" value="1,000원" onclick="setAmount('1000')">
+                            </td>
+                            <td>
+                                <input type="button" name="amountButton" value="2,000원" onclick="setAmount('2000')">
+                            </td>
                         </tr>
                         <tr>
-                            <td>3,000원</td>
-                            <td>5,000원</td>
+                            <td>
+                                <input type="button" name="amountButton" value="3,000원" onclick="setAmount('3000')">
+                            </td>
+                            <td>
+                                <input type="button" name="amountButton" value="5,000원" onclick="setAmount('5000')">
+                            </td>
                         </tr>
                         <tr>
-                            <td>10,000원</td>
-                            <td>20,000원</td>
+                            <td>
+                                <input type="button" name="amountButton" value="10,000원" onclick="setAmount('10000')">
+                            </td>
+                            <td>
+                                <input type="button" name="amountButton" value="20,000원" onclick="setAmount('20000')">
+                            </td>
                         </tr>
                     </table>
                 </div>
                 <div class="charge-form">
-                    <div class="current-money">
-                        현재잔액
+                    <div class="charge-form-top">
+                        <div class="current-money-left">
+                            현재잔액
+                        </div>
+                        <div class="current-money-right" th:text="${#numbers.formatInteger(currentMoney, 3, 'COMMA') + '원'}">
+
+                        </div>
+                    </div>
+                    <div class="blank-space" id="blank-space">
+
                     </div>
                     <div class="buttons">
-                        <button type="button" >결제하기</button>
+                        <input type="hidden" id="amount" name="amount" value="">
+                        <button type="submit">결제하기</button>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </form>
 </div>
 
 </body>
+</html>
 </html>
