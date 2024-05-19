@@ -84,6 +84,7 @@ public class AdminService {
     }//주문한 수량에 맞게 재고가 줄어들게 //sellAmount 주문한 수량 , menuAmount 재고 (주문한 수량 > 재고 일때 구현해야함 미완)
 
     public List<BestSellerDto> getBestSellers() {
+
         List<Object[]> results = sellRepository.getSalesSum();
         List<BestSellerDto> bestSellers = new ArrayList<>();
 

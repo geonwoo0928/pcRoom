@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="content" layout:fragment="content">
-    <div class="p-3 mb-2 bg-primary-subtle text-color">
+    <div class="p-3 mb-2">
         <div class="h4 pb-2 mb-4 text-color border-bottom border-dark text-center">
             <h3>주문현황 🧾</h3>
         </div>
@@ -24,7 +24,7 @@
                     <div class="card-2">
                         <!-- user name-->
                         <div class="user">
-                            <span th:text="*{usersDto != null && usersDto.name != null ? usersDto.name : '탈퇴회원'}"></span></span>
+                            <span th:text="'🙋 : ' + *{usersDto != null && usersDto.name != null ? usersDto.name : '탈퇴회원'}"></span></span>
                         </div>
                         <!-- menu name , amount -->
                         <div class="menu-amount">

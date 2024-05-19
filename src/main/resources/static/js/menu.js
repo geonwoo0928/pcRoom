@@ -150,7 +150,7 @@ function check(){
         document.getElementById("menuAmount").focus();
         return false;
     }
-    alert("입력이 완료되었습니다.")
+    alert("수정이 완료되었습니다.")
     document.getElementById("frm").submit()
     return true
 }

@@ -88,6 +88,7 @@ public class PcAdminController {
 
     @GetMapping("/admin/sales")
     public String sales(Model model) {
+
         // 가장 많이 판매한 메뉴
         List<BestSellerDto> bestSellers = adminService.getBestSellers();
         model.addAttribute("best", bestSellers);

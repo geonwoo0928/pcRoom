@@ -4,6 +4,7 @@
       layout:decorate="~{layouts/default_layout}">
 <head>
     <meta charset="UTF-8">
+    <script th:src="@{/js/user.js}" th:inline="javascript"></script>
     <title>Quokka's PC</title>
     <link rel="stylesheet" th:href="@{/css/user-info-box.css}">
 </head>
@@ -21,19 +22,35 @@
             </div>
         </div>
         <div class="box-half2">
-            <form th:action="@{/user/userSelfUpdate}" method="get">
-                <input type="submit" value="내정보수정">
-            </form>
+            <div class="box-half5">
+                <form id="signUpForm" th:action="@{/user/userSelfUpdate}" method="get" target="_blank">
+                    <input type="submit" value="내정보수정">
+                </form>
+                <script>
+                    document.getElementById("signUpForm").addEventListener("submit", function(event) {
+                        event.preventDefault(); // 기본 동작 중지
+                        var popupWidth = 470;
+                        var popupHeight = 500;
+                        var left = (screen.width - popupWidth) / 2;
+                        var top = (screen.height - popupHeight) / 2;
 
-
-            <form method="post" th:action="@{/logout}" >
-                <!--                    <input type="hidden" name="_csrf" value="${_csrf.token}" />  CSRF 토큰 추가  -->
-                <button type="submit" class="btn btn-outline-primary">사용종료</button>
-            </form>
-
-            <form th:action="@{/user/userDelete}" method="post">
-                <input type="submit" value="회원탈퇴">
-            </form>
+                        // 팝업 창을 생성 후 signIn 페이지 가운데에 위치 시킴
+                        window.open(this.action, "signInPopup", "width=" + popupWidth + ",height=" + popupHeight + ",left=" + left + ",top=" + top);
+                        });
+                </script>
+            </div>
+            <div class="box-half6">
+                <div class="box-half7">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit">사용종료</button>
+                    </form>
+                </div>
+                <div class="box-half8">
+                    <form th:action="@{/user/userDelete}" method="post">
+                        <input type="submit" value="회원탈퇴">
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 

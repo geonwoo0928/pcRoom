@@ -43,3 +43,23 @@ function check2() {
     document.getElementById("form").submit();
     return true;
 }
+
+function confirmDelete() {
+    if (confirm("정말 삭제하시겠습니까? \n확인 버튼 선택 시 계정은 삭제되며 복구되지 않습니다.")) {
+        alert("삭제 완료되었습니다.");
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function confirmDelete2() {
+    if (confirm("정말 탈퇴하시겠습니까? \n확인 버튼 선택 시 계정은 삭제되며 복구되지 않습니다.")) {
+        alert("탈퇴 완료 \n이용해 주셔서 감사합니다");
+        return true;
+    } else {
+        return false;
+    }
+}
+
+

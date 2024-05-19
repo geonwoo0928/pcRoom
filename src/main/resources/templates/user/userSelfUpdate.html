@@ -13,7 +13,6 @@
         <tr>
             <td>아이디</td>
             <td><input id="username" name="userId" type="text" th:value="*{userId}"></td>
-            <td><input type="button" value="중복확인" class="idCheckBtn"></td>
         </tr>
         <tr>
             <td>이름</td>
@@ -24,21 +23,21 @@
             <td colspan="2"><input id="password1" name="password1" type="password" th:value="*{password1}"></td>
         </tr>
         <tr>
-            <td class="errorCode" th:errors="${updateUserDto.password1}"></td>
+            <td class="errorCode" th:errors="*{password1}"></td>
         </tr>
         <tr>
             <td>새로운 비밀번호 확인</td>
             <td colspan="2"><input id="password2" name="password2" type="password" th:value="*{password2}"></td>
         </tr>
         <tr>
-            <td class="errorCode" th:errors="${updateUserDto.password2}"></td>
+            <td class="errorCode" th:errors="*{password2}"></td>
         </tr>
         <tr>
             <td>이메일</td>
             <td colspan="2"><input id="email" name="email" type="email" th:value="*{email}"></td>
         </tr>
         <tr>
-            <td class="errorCode" th:errors="${updateUserDto.email}"></td>
+            <td class="errorCode" th:errors="*{email}"></td>
         </tr>
         <tr>
             <td>전화번호</td>

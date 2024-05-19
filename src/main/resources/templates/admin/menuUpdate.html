@@ -9,7 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/admin_sell.css}">
 </head>
 <body>
-    <div class="content" layout:fragment="content">
+    <div class="content1" layout:fragment="content">
         <form class="row g-3" id="frm" name="frm" th:action="@{/admin/menuUpdate}" method="post" th:object="${menuUpdate}">
             <div class="col-12">
                 <input type="hidden" name="menuId" th:value="*{menuId}">

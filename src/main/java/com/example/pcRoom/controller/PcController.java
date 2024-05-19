@@ -58,8 +58,6 @@ public class PcController {
     @PostMapping("/user/userSignUp")
     public String userSignPost(@Valid @ModelAttribute("dto") CreateUserDto createUserDto ,
                                BindingResult bindingResult){
-        System.out.println(createUserDto.toString());
-
         if (bindingResult.hasErrors()) {
             return "/user/userSignUp";
         }
@@ -90,6 +88,11 @@ public class PcController {
     public String showRegistrationSuccess(){
         return "/registrationSuccess";
     } //회원가입 성공페이지
+
+    @GetMapping("/updateSuccess")
+    public String showUpdateSuccess(){
+        return "/updateSuccess";
+    }
 
     @GetMapping("/user")
     public String userMainPage(Model model) {
@@ -139,12 +142,18 @@ public class PcController {
             bindingResult.rejectValue("password2", "password incorrect", "비밀번호가 일치하지 않습니다");
             return "/user/userSelfUpdate";
         }
+        try {
+            userService.updateUser(updateUserDto);
+        }
+         catch (Exception e) {
+            bindingResult.reject("signupFailed", e.getMessage());
+            return "/user/userSelfUpdate";
+        }
 
-        // 수정된 사용자 정보 업데이트
-        userService.updateUser(updateUserDto);
 
-        return "redirect:/user";
-    }
+
+        return "redirect:/updateSuccess";
+    }// 수정된 사용자 정보 업데이트
 
     @PostMapping("/user/userDelete")
     public String deleteUser() {
@@ -171,6 +180,26 @@ public class PcController {
         model.addAttribute("currentMoney" , currentMoney);
         return "/user/user_menu_drink";
     } //[음료]메뉴판으로 이동
+
+    @GetMapping("/user/userMenu3")
+    public String userMenu3(Model model) {
+        UsersDto usersDto = userService.showCurrentUser();
+        int currentMoney = usersDto.getMoney();
+        List<MenuDto> menuDtoList = userService.showAllMenuKind("간식");
+        model.addAttribute("menuDto", menuDtoList);
+        model.addAttribute("currentMoney" , currentMoney);
+        return "/user/user_menu_snack";
+    } //[간식]메뉴판으로 이동
+
+    @GetMapping("/user/userMenu4")
+    public String userMenu4(Model model) {
+        UsersDto usersDto = userService.showCurrentUser();
+        int currentMoney = usersDto.getMoney();
+        List<MenuDto> menuDtoList = userService.showAllMenuKind("과자");
+        model.addAttribute("menuDto", menuDtoList);
+        model.addAttribute("currentMoney" , currentMoney);
+        return "/user/user_menu_chips";
+    } //[과자]메뉴판으로 이동
 
     @GetMapping("/user/userInsertCoin")
     public String userInsertCoin(Model model) {

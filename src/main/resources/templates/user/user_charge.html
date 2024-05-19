@@ -12,11 +12,14 @@
             const formattedValue = Number(value).toLocaleString() + '원';
             document.getElementById('blank-space').innerText = formattedValue;
         }
+        function confirmCharge() {
+            alert('충전이 완료되었습니다.');
+        }
     </script>
 </head>
 <body>
 <div class="content" layout:fragment="content">
-    <form th:action="@{/user/userInsertCoin}" method="post" class="container">
+    <form th:action="@{/user/userInsertCoin}" method="post" class="container" onsubmit="confirmCharge()">
         <div class="charge-body">
             <div class="payment-container">
                 <div class="price-list">
@@ -48,12 +51,14 @@
                     </table>
                 </div>
                 <div class="charge-form">
+                    <div class="close-button-container">
+                        <a class="close-button" th:href="@{/user}">⨉</a>
+                    </div>
                     <div class="charge-form-top">
                         <div class="current-money-left">
                             현재잔액
                         </div>
                         <div class="current-money-right" th:text="${#numbers.formatInteger(currentMoney, 3, 'COMMA') + '원'}">
-
                         </div>
                     </div>
                     <div class="blank-space" id="blank-space">
@@ -61,7 +66,7 @@
                     </div>
                     <div class="buttons">
                         <input type="hidden" id="amount" name="amount" value="">
-                        <button type="submit">결제하기</button>
+                        <button type="submit">충전하기</button>
                     </div>
                 </div>
             </div>
@@ -69,7 +74,6 @@
         </div>
     </form>
 </div>
-
 </body>
 </html>
 </html>

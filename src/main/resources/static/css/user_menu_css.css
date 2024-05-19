@@ -73,6 +73,7 @@ body{
 
 /* 메뉴오더창 */
 .menu-order {
+    position : relative;
     width: 100%;
     height: 850px;
     background: linear-gradient(#9234ae, #4386cf);
@@ -190,4 +191,17 @@ body{
 
 .purchase-button:hover {
     background-color: #f7c436; /* 마우스 오버 시 색상 변경 */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;  /* 상단에서의 거리 */
+    right: 10px; /* 오른쪽에서의 거리 */
+    font-size: 20px;
+    border: none;
+    background: transparent;
+    text-decoration: none;
+    cursor: pointer;
+    color: inherit;
+    padding: 5px 8px;
 }

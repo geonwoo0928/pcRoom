@@ -1,0 +1,63 @@
+/* 테이블을 가운데 정렬 */
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    flex-direction: column;
+}
+
+/* 테이블과 스크롤을 감싸는 컨테이너 */
+.scrollable-table-container {
+    margin: 50px auto 100px;
+    max-height: 300px; /* 테이블의 최대 높이 설정 */
+    overflow-y: auto; /* 세로 스크롤을 활성화하여 넘치는 부분을 스크롤 가능하도록 함 */
+    overflow-x: hidden; /* 가로 스크롤을 숨김 */
+    position: relative; /* 자식 요소를 상대적으로 배치하기 위해 설정 */
+}
+
+/* 스크롤이 가능한 테이블을 위한 스타일 */
+.scrollable-table {
+    width: 100%; /* 테이블이 부모 요소에 꽉 차도록 함 */
+    border-collapse: collapse; /* 테이블 셀 경계를 병합 */
+    border-spacing: 0; /* 테이블 셀 사이의 간격을 없앰 */
+}
+
+/* 테이블 헤더 */
+.scrollable-table thead {
+    background-color: #E5F0FF;
+    position: sticky; /* 테이블 헤더를 고정 */
+    top: 0; /* 테이블 헤더를 상단에 고정 */
+    z-index: 1; /* 테이블 헤더를 다른 요소 위에 표시 */
+}
+.scrollable-table tbody tr:nth-child(even) {
+    background-color: #F5F9FF;
+}
+
+th, td {
+  padding: 0.6rem;
+  min-width: 10rem;
+  text-align: left;
+  margin: 0;
+}
+
+/* 총 매출 */
+.total-row {
+    font-weight: 900;
+    color: #000000;
+    text-align: center;
+    border: 2px solid #BA55D3; /* 테두리 스타일과 색상 설정 */
+    border-radius: 20px; /* 상자의 테두리 반경 설정 */
+    padding: 0.5rem; /* 상자 내부의 간격 설정 */
+    margin-top: 10px; /* 총 매출과 테이블 사이의 간격 설정 */
+}
+
+/* 스크롤 바 */
+.scrollable-table-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollable-table-container::-webkit-scrollbar-thumb {
+    background-color: #DCDCDC; /* 스크롤 바 색상 설정 */
+    border-radius: 5px; /* 스크롤 바 모서리 둥글게 설정 */
+}

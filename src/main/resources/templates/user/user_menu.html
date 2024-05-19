@@ -14,8 +14,8 @@
             <div class="menu_nav">
                 <a class="nav-link" th:href="@{/user/userMenu}">[쿼카PC]라면</a>
                 <a class="nav-link" th:href="@{/user/userMenu2}">[쿼카PC]음료</a>
-                <a class="nav-link" href="#">[쿼카PC]간식</a>
-                <a class="nav-link" href="#">[쿼카PC]과자</a>
+                <a class="nav-link" th:href="@{/user/userMenu3}">[쿼카PC]간식</a>
+                <a class="nav-link" th:href="@{/user/userMenu4}">[쿼카PC]과자</a>
             </div>
             <div class="menu_list"><!--메뉴 보이는 코드-->
                 <table class="menu-table">
@@ -34,8 +34,10 @@
             </div><!--메뉴 보이는 코드-->
             <div class="menu-order"><!--주문내역-->
                 <div class="menu-form">
+                    <div class="close-button-container">
+                        <a class="close-button" th:href="@{/user}">⨉</a>
+                    </div>
                     <div class="menu-order-view" id="menu-order-view"><!--주문내역표시창-->
-
                     </div>
                     <div class="order-price-total">
                         <!--                    주문총금액-->
