@@ -46,7 +46,7 @@
                     </form>
                 </div>
                 <div class="box-half8">
-                    <form th:action="@{/user/userDelete}" method="post">
+                    <form th:action="@{/user/userDelete}" method="post" onsubmit="return confirmDelete2()">
                         <input type="submit" value="회원탈퇴">
                     </form>
                 </div>
